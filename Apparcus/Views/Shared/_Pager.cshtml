@@ -1,0 +1,37 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Extensions
+@model X.PagedList.IPagedList
+@{
+    int? page = ViewData["RequestedPage"] as int?;
+    var currentUrl = Context.Request.GetDisplayUrl();
+    var url = currentUrl.ToString();
+    var modifiedUrl = url;
+    if (url.ToLower().Contains("page"))
+    {
+        modifiedUrl = url.Split(new string[] { "&page", "?page" }, StringSplitOptions.None)[0];
+    }
+}
+
+@if (Model.PageCount > 0)
+{
+    @Html.PagedListPager(Model, page => modifiedUrl + (modifiedUrl.Contains("?") ? "&" : "?") + "page=" + page, new PagedListRenderOptions
+    {
+        DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+        DisplayLinkToLastPage = PagedListDisplayMode.Never,
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        DisplayLinkToIndividualPages = true,
+        MaximumPageNumbersToDisplay = 10,
+        DisplayPageCountAndCurrentLocation = false,
+        LinkToNextPageFormat = "&raquo;",
+        LinkToPreviousPageFormat = "&laquo;",
+        ContainerDivClasses = new List<string>() { "text-center" },
+        UlElementClasses = new List<string>() { "pagination" }
+    })
+}
+else
+{
+    <p class="text-center">No data to display.</p>
+}

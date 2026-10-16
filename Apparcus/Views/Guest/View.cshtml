@@ -1,0 +1,659 @@
+﻿@model Core.ViewModels.ProjectViewModel
+@{
+	ViewData["Title"] = "Contribute";
+	Layout = "~/Views/Shared/_GuestLayout.cshtml";
+
+	// A Type-B project is a record of payments that already happened. There is
+	// nothing left to raise, contribute to, or message about, so the page shows
+	// the record and nothing that invites an action that cannot happen.
+	var isRecordSheet = Model.Type == "B";
+}
+
+<style>
+	/* Fixed ratio so a portrait snap and a wide flyer both sit in the same
+	   band, and the card below never jumps as the image loads. */
+	.project-banner {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: var(--border, #e9ecef);
+		border-top-left-radius: inherit;
+		border-top-right-radius: inherit;
+	}
+
+		.project-banner img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+
+	.panel {
+		display: none;
+	}
+
+		.panel.active {
+			display: block;
+		}
+
+	.tab-bar {
+		display: flex;
+		gap: 4px;
+		border-bottom: 0.5px solid var(--border);
+		margin-bottom: 1.5rem;
+	}
+
+	.tab-btn {
+		background: none;
+		border: none;
+		border-bottom: 2px solid transparent;
+		padding: 10px 16px;
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--text-secondary);
+		cursor: pointer;
+		margin-bottom: -1px;
+		transition: color 0.15s;
+	}
+
+		.tab-btn.active {
+			color: var(--text-primary);
+			border-bottom-color: var(--border-accent);
+		}
+
+		.tab-btn:hover:not(.active) {
+			color: var(--text-primary);
+		}
+
+	.item-row {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 12px 0;
+		border-bottom: 0.5px solid var(--border);
+	}
+
+		.item-row:last-child {
+			border-bottom: none;
+		}
+
+	.avatar {
+		width: 38px;
+		height: 38px;
+		border-radius: 50%;
+		background: var(--bg-accent);
+		color: var(--text-accent);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 13px;
+		font-weight: 500;
+		flex-shrink: 0;
+	}
+
+	.item-name {
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--text-primary);
+		margin: 0 0 2px;
+	}
+
+	.item-meta {
+		font-size: 13px;
+		color: var(--text-secondary);
+		margin: 0;
+	}
+
+	.amount {
+		color: var(--text-accent);
+		font-weight: 500;
+	}
+
+	.badge {
+		display: inline-block;
+		font-size: 12px;
+		padding: 2px 8px;
+		border-radius: 20px;
+		font-weight: 500;
+	}
+
+	.badge-success {
+		background: var(--bg-success);
+		color: var(--text-success);
+	}
+
+	.badge-warning {
+		background: var(--bg-warning);
+		color: var(--text-warning);
+	}
+
+	.badge-default {
+		background: var(--surface-1);
+		color: var(--text-secondary);
+		border: 0.5px solid var(--border);
+	}
+
+	.comment-body {
+		font-size: 14px;
+		color: var(--text-secondary);
+		margin: 4px 0 0;
+		line-height: 1.6;
+	}
+
+	.empty {
+		color: var(--text-muted);
+		font-size: 14px;
+		padding: 2rem 0;
+		text-align: center;
+	}
+
+	.icon-circle {
+		width: 38px;
+		height: 38px;
+		border-radius: 50%;
+		background: var(--surface-1);
+		border: 0.5px solid var(--border);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+</style>
+
+<div class="container col-md-9 pt-5">
+	<div class="content">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card pt-3">
+					<div class="card-body p-0">
+						@* The picture the owner chose, at the top where it is the first
+						   thing seen. It was stored but never rendered, so a project
+						   shared as a link showed nothing of what it was for. *@
+						@if (!string.IsNullOrWhiteSpace(Model.RelatedImageUrl))
+						{
+							<div class="project-banner">
+								<img src="@Model.RelatedImageUrl" alt="@Model.Name" loading="lazy" />
+							</div>
+						}
+						<div class="text-center px-3 pb-3 border-bottom">
+							<div class="mb-3">
+								<a href="#" class="flex-shrink-0 me-2">
+									@if (!string.IsNullOrEmpty(Model.OwnersProfilePic))
+									{
+										<img src="@Model.OwnersProfilePic" class="img-fluid rounded-circle" width="100" alt="img">
+									}
+									else
+									{
+										<img src="~/template/assets/img/products/product-05.jpg" class="img-fluid rounded-circle" alt="img">
+									}
+								</a>
+								@* A contributor needs to know whose project this is and who to
+								   call if a transfer goes wrong, so the name and phone number
+								   show either way. The email address is the one detail a public
+								   project withholds: it invites spam and phishing, and it is of
+								   no use to a contributor. *@
+								<h5 class="d-flex align-items-center justify-content-center mb-1">@Model.CreatedBy<i class="ti ti-discount-check-filled text-success ms-1"></i></h5>
+								<span class="badge badge-soft-dark fw-medium me-2">
+									<i class="ti ti-point-filled me-1"></i>@Model.CreatedByPhoneNumber
+								</span>
+								@if (!Model.IsPublic && !isRecordSheet)
+								{
+									<span class="badge badge-soft-secondary fw-medium">@Model.CreatedByEmail</span>
+								}
+							</div>
+							<div>
+								@if (!isRecordSheet)
+								{
+									<div class="d-flex align-items-center justify-content-between mb-2">
+										<span class="d-inline-flex align-items-center">
+											<i class="ti ti-id me-2"></i>
+											Amount Needed
+										</span>
+										<p class="text-dark">₦@Model.AmountNeeded</p>
+									</div>
+								}
+								<div class="d-flex align-items-center justify-content-between mb-2">
+									<span class="d-inline-flex align-items-center">
+										<i class="ti ti-star me-2"></i>
+										Amount Obtained
+									</span>
+									<p class="text-dark">₦@Model.AmountObtained</p>
+								</div>
+								<div class="d-flex align-items-center justify-content-between mb-2">
+									<span class="d-inline-flex align-items-center">
+										<i class="ti ti-calendar-check me-2"></i>
+										@(isRecordSheet ? "Date" : "Date Of Created")
+									</span>
+									@* The owner's own date on a record sheet: the day the money
+									   was taken, not the day it was typed up. *@
+									<p class="text-dark">
+										@((isRecordSheet ? Model.CustomDate ?? Model.DateCreated : Model.DateCreated)?.ToString("dd-MM-yyyy"))
+									</p>
+								</div>
+								@if (isRecordSheet)
+								{
+									@* Nothing to do here but read it. *@
+								}
+								else if (Model.Status == "Closed")
+								{
+									<div class="alert alert-warning text-center mt-3 mb-3">
+										<i class="ti ti-lock me-1"></i>
+										<strong>This project has been closed.</strong><br />
+										Contributions are no longer accepted.
+									</div>
+
+									<div class="row gx-2">
+										<div class="col-12">
+											<a href="#" class="btn btn-primary w-100"
+											   data-bs-toggle="modal"
+											   data-bs-target="#message">
+												<i class="ti ti-message-heart me-1"></i>Message
+											</a>
+										</div>
+									</div>
+								}
+								else
+								{
+									<div class="row gx-2 mt-3">
+										<div class="col-6">
+											<a href="#" class="btn btn-dark w-100"
+											   data-bs-toggle="modal"
+											   data-bs-target="#support">
+												₦ Contribute
+											</a>
+										</div>
+
+										<div class="col-6">
+											<a href="#" class="btn btn-primary w-100"
+											   data-bs-toggle="modal"
+											   data-bs-target="#message">
+												<i class="ti ti-message-heart me-1"></i>Message
+											</a>
+										</div>
+									</div>
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="accordion-item">
+					<div class="accordion-header">
+						<div class="accordion-button">
+							<div class="d-flex align-items-center flex-fill">
+								<h5>Project Description for @Model.Name</h5>
+							</div>
+						</div>
+					</div>
+					<div class="accordion-body">
+						<div class="accordion-body mt-2">
+							@Html.Raw(Model.Description)
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<div class="contact-grids-tab p-0 mb-3">
+					<ul class="nav nav-underline" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<button class="nav-link active" id="contributors-tab" data-bs-toggle="tab"
+									data-bs-target="#contributors" type="button" role="tab">
+								<i class="ti ti-users" aria-hidden="true"></i>  Contributors
+							</button>
+						</li>
+						@if (!isRecordSheet)
+						{
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="comments-tab" data-bs-toggle="tab"
+										data-bs-target="#comments" type="button" role="tab">
+									<i class="ti ti-message" aria-hidden="true"></i> Comments
+								</button>
+							</li>
+						}
+						@if (Model.ShowForAudit && !isRecordSheet)
+						{
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="history-tab" data-bs-toggle="tab"
+										data-bs-target="#history" type="button" role="tab">
+									<i class="ti ti-clock" aria-hidden="true"></i> Withdrawal History
+								</button>
+							</li>
+						}
+					</ul>
+				</div>
+				<div style="padding: 1rem 0;">
+					<div id="contributors" class="panel active">
+						@if (Model.ProjectContributions != null && Model.ProjectContributions.Any())
+						{
+							foreach (var projectContribution in Model.ProjectContributions)
+							{
+								var initials = string.Join("",
+										projectContribution.ContributorsName
+											.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+											.Select(x => char.ToUpper(x[0])));
+
+								<div class="item-row">
+									<div class="avatar">@initials</div>
+									<div style="flex:1;">
+										<p class="item-name">@projectContribution.ContributorsName</p>
+										<p class="item-meta">
+											@if (!string.IsNullOrWhiteSpace(projectContribution.DisplayValue))
+											{
+												<span class="amount">@projectContribution.DisplayValue</span>
+											}
+											else
+											{
+												<span class="amount">₦@projectContribution.Amount</span>
+											}
+											&middot; @projectContribution.Date?.ToString("dd MMM, yyyy h:mm tt")
+										</p>
+									</div>
+								</div>
+							}
+						}
+					</div>
+
+					<div id="comments" class="panel">
+						@if (Model.Comments != null && Model.Comments.Any())
+						{
+							foreach (var comment in Model.Comments)
+							{
+								var initials = string.Join("",
+										comment.FullName
+											.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+											.Select(x => char.ToUpper(x[0])));
+
+								<div class="item-row" style="align-items:flex-start;">
+									<div class="avatar">@initials</div>
+									<div style="flex:1;">
+										<p class="item-name">@comment.FullName</p>
+										<p class="comment-body">@comment.Comment</p>
+										<p class="item-meta" style="margin-top:6px;">@comment.DateCreated.ToString("dd MMM, yyyy h:mm tt")</p>
+									</div>
+								</div>
+							}
+						}
+					</div>
+
+					<div id="history" class="panel">
+						@if (Model.ShowForAudit && Model.Withdrawals != null && Model.Withdrawals.Any())
+						{
+							foreach (var withdrawal in Model.Withdrawals)
+							{
+								<div class="item-row">
+									<div class="icon-circle">
+										<i class="ti ti-arrow-up-right" style="font-size:18px;color:var(--text-accent);" aria-hidden="true"></i>
+									</div>
+									<div style="flex:1;">
+										<p class="item-name">Sent to @withdrawal.SentTo&middot; <span style="font-weight:400;color:var(--text-secondary);">@withdrawal.AccountWithdrawnTo</span></p>
+										<p class="item-meta"><span class="amount">₦@withdrawal.Amount</span> &middot; @withdrawal.CreatedAt.ToString("dd MMM, yyyy h:mm tt")</p>
+									</div>
+									<span class="badge badge-success">@withdrawal.Status</span>
+								</div>
+							}
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@* A record sheet takes no contribution and invites no comment, so
+   neither dialog is rendered for one at all. *@
+@if (!isRecordSheet)
+{
+<div class="modal fade" id="support">
+	<div class="modal-dialog modal-dialog-centered modal-md">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div>
+					@* Retitled on the way into the transfer step by showPaymentStep():
+					   once a contributor has entered their details, the heading has
+					   to say what to do next, not repeat the project they already
+					   chose. *@
+					<h4 class="modal-title" id="supportModalTitle">
+						Support @Model.Name
+					</h4>
+
+					<p class="text-muted mb-0" id="supportModalSubtitle">
+						Amount Needed ₦@Model.AmountNeeded
+					</p>
+				</div>
+
+				<button type="button"
+						class="btn-close"
+						data-bs-dismiss="modal">
+				</button>
+			</div>
+
+			<div class="modal-body">
+
+				<input type="hidden"
+					   id="projectId"
+					   value="@Model.Id">
+
+				<div id="contributorSection">
+
+					<div class="mb-3">
+						<label class="form-label">
+							Full Name
+						</label>
+
+						<input type="text"
+							   id="fullName"
+							   class="form-control">
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">
+							Phone Number
+						</label>
+
+						<input type="text"
+							   id="phoneNumber"
+							   class="form-control">
+					</div>
+
+					<div class="row">
+
+						<div class="mb-3 col-md-6">
+							<label class="form-label">
+								Amount
+							</label>
+
+							<input type="number"
+								   id="amount"
+								   class="form-control">
+						</div>
+
+						<div class="mb-3 col-md-6">
+							<label class="form-label">
+								Payable
+							</label>
+
+							<input type="text" readonly id="payable" class="form-control disabled">
+							<small class="text-muted">
+								Includes the transaction charge &mdash;
+								<a href="/Home/Pricing" target="_blank" rel="noopener">see our published rates</a>.
+							</small>
+						</div>
+						@if (Model.CustomFields != null)
+						{
+							@foreach (var field in Model.CustomFields)
+							{
+								<div class="mb-3">
+									<label class="form-label">
+										@field.FieldName
+										@if (field.IsRequired)
+										{
+											<span class="text-danger">*</span>
+										}
+									</label>
+
+									<input type="@field.FieldType"
+										   class="form-control dynamic-field"
+										   data-field-id="@field.Id" />
+								</div>
+							}
+						}
+					</div>
+
+					<button class="btn btn-primary w-100"
+							id="startContributionBtn"
+							onclick="contribute()">
+						Continue
+					</button>
+
+				</div>
+
+				@* Above the account details on purpose. A contributor who has just
+				   pressed Continue needs to be told to go and make a transfer; during
+				   the pilot this step led with "Waiting for confirmation", which reads
+				   as though the app is doing something and they are done. *@
+				<div id="paymentWaitingSection" class="d-none">
+
+					<div class="text-center mt-4">
+
+						<div class="spinner-border text-primary"
+							 style="width:44px;height:44px;">
+						</div>
+
+						<h5 class="mt-3 mb-1">
+							Please make your transfer into
+						</h5>
+
+						<p class="text-muted mb-0">
+							Complete the transfer within
+							<span id="countdown">05:00</span>
+						</p>
+
+						<div id="paymentStatusMessage"
+							 class="fw-bold mt-2">
+						</div>
+
+					</div>
+
+				</div>
+
+				<div id="paymentInstructionSection"
+					 class="d-none">
+
+					<div class="alert alert-info mt-3">
+
+						<div class="mb-2">
+							<strong>
+								Account Name:
+								<span id="displayAccountName"></span>
+							</strong>
+						</div>
+
+						<div class="mb-2">
+							<strong>
+								Account Number:
+								<span id="displayAccountNumber"></span>
+							</strong>
+						</div>
+
+						<div class="mb-2">
+							<strong>
+								Bank:
+								<span id="displayBank"></span>
+							</strong>
+						</div>
+
+						<div class="mb-2">
+							<strong>
+								Amount:
+								₦<span id="displayAmount"></span>
+							</strong>
+						</div>
+					</div>
+
+					<div class="alert alert-danger d-flex align-items-start" role="alert">
+						<i class="ti ti-alert-triangle me-2 mt-1"></i>
+						<div>
+							<strong>Important:</strong> Please transfer the <u>exact amount</u> shown above
+							<strong>
+								(₦<span id="displayAmountWarning"></span>).
+							</strong> <br /> 
+							Transferring a different amount even by a few <strong> kobo </strong> may prevent us from automatically matching and confirming
+							your payment, which could delay your contribution being recorded.
+						</div>
+					</div>
+
+				</div>
+
+
+				<div id="paymentSuccessSection"
+					 class="d-none">
+
+					<div class="text-center mt-4">
+
+						<div class="mb-3">
+							<i class="ti ti-circle-check-filled text-success"
+							   style="font-size:80px;">
+							</i>
+						</div>
+
+						<h4 class="text-success">
+							Payment Successful
+						</h4>
+
+						<p class="text-muted">
+							Your contribution was received.
+						</p>
+
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Comment -->
+<div class="modal fade" id="message">
+	<div class="modal-dialog modal-dialog-centered modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="row">
+					<h4 class="text-center">Drop A Comment</h4>
+				</div>
+				<button type="button" class="btn-close custom-btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<i class="ti ti-x"></i>
+				</button>
+			</div>
+			<div class="modal-body pb-0">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="mb-3">
+							<label class="form-label">Full Name <span class="text-danger">*</span></label>
+							<input type="text" id="yourFullName" class="form-control">
+							<input type="text" id="messageId" value="@Model.Id" hidden class="form-control">
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div class="mb-3">
+							<label class="form-label">Comments <span class="text-danger">*</span></label>
+							<textarea id="addComments" class="form-control" rows="4"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-light me-2" data-bs-dismiss="modal">Cancel</button>
+				<button type="submit" id="submit_btn" onclick="comment()" class="btn btn-primary">Send</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Comment -->
+}

@@ -1,0 +1,27 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Apparcus/bin/Debug/net8.0
+/Apparcus/obj
+/Core/bin/Debug/net8.0
+/Core/obj
+/Logic/bin/Debug/net8.0
+/Logic/obj
+/Apparcus/Properties/launchSettings.json
+/Apparcus/wwwroot/uploads/avatars
+/Apparcus/bin/Release/net8.0
+/Core/bin/Release/net8.0
+/Logic/bin/Release/net8.0
+/Apparcus/Properties/PublishProfiles
+/Apparcus/wwwroot/payment-proofs
+/Apparcus/appsettings.json
+
+# Secrets
+/Apparcus/appsettings.Development.json
+/Apparcus/appsettings.Production.json
+/Apparcus/keys/
+*.pem
+*.pfx
+*.user

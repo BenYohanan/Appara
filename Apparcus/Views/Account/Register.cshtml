@@ -1,0 +1,218 @@
+﻿@model Apparcus.Models.RegisterViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+    ViewData["Title"] = "Register";
+}
+<style>
+    .bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        filter: brightness(60%);
+    }
+
+    .auth-card {
+        max-width: 420px;
+        margin: 100px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        z-index: 10;
+        position: relative;
+    }
+
+        .auth-card h2 {
+            font-weight: 600;
+            color: #9333ea;
+        }
+    .custom-checkbox {
+        width: 26px;
+        height: 26px;
+        border: 2px solid #e9d5ff;
+        border-radius: 8px;
+        appearance: none;
+        -webkit-appearance: none;
+        outline: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        margin-top: 2px;
+        transition: all 0.2s;
+    }
+
+        .custom-checkbox:checked {
+            background-color: #9333ea;
+            border-color: #9333ea;
+        }
+
+            .custom-checkbox:checked::after {
+                content: '✓';
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+    .form-check {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+
+    .form-check-label {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #333;
+        padding-top: 2px;
+    }
+
+        .form-check-label a {
+            color: #9333ea;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+    .checkbox-container {
+        background: #f8f5ff;
+        border-radius: 12px;
+        padding: 20px 22px;
+        margin: 10px 0 25px 0;
+        border: 1px solid #e9d5ff;
+    }
+
+    .checkbox-title {
+        font-weight: 600;
+        color: #1e1e5d;
+        margin-bottom: 16px;
+        font-size: 16px;
+    }
+
+    #checkboxWarning {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+        font-size: 14px;
+        display: none;
+    }
+
+    .btn-create {
+        background: linear-gradient(to right, #9333ea, #7c3aed);
+        border: none;
+        border-radius: 12px;
+        padding: 14px;
+        font-size: 17px;
+        font-weight: 600;
+    }
+</style>
+
+<!-- Background Video -->
+<video autoplay muted loop playsinline class="bg-video">
+    <source src="~/leadpage/assets/img/video/video-2.mp4" type="video/mp4">
+</video>
+<div class="auth-card" data-aos="zoom-in" data-aos-delay="100" style="margin-top:155px; max-width:530px !important;">
+    <div class="text-center mb-4">
+        <img src="~/leadpage/assets/img/Apparcus logo.jpg" alt="Apparcus Logo" class="img-fluid mb-3" style="width:80px;">
+        <h2>Create Account</h2>
+        <p>Join Apparcus Payments today</p>
+    </div>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label>First Name</label>
+            <input class="form-control" type="text" id="firstName" />
+        </div>
+        <div class="mb-3 col-md-6">
+            <label>Last Name</label>
+            <input class="form-control" type="text" id="lastName" />
+        </div>
+    </div>
+   <div class="row">
+        <div class="mb-3 col-md-6">
+            <label>Phone Number</label>
+            <input id="phone" type="text" class="form-control" />
+        </div>
+        <div class="mb-3 col-md-6">
+            <label>Date of birth</label>
+            <input id="dateOfBirth" type="date" class="form-control" />
+        </div>
+   </div>
+    <div class="mb-3 col-md-12">
+        <label>Email</label>
+        <input id="email" type="text" class="form-control" />
+    </div>
+   
+    <div class="mb-3 col-md-12">
+        <label>Address</label>
+        <input id="address" type="text" class="form-control" />
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label>Password</label>
+            <div class="position-relative">
+                <input type="password" name="Password" id="password" class="form-control" placeholder="Enter your password" required style="padding-right:2.8rem;" />
+                <span onclick="toggleField('password', 'toggleIconPassword')"
+                      style="position:absolute;top:50%;right:0.85rem;transform:translateY(-50%);cursor:pointer;color:#9333ea;">
+                    <i class="bi bi-eye-slash" id="toggleIconPassword"></i>
+                </span>
+            </div>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label>Confirm Password</label>
+            <div class="position-relative">
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" style="padding-right:2.8rem;" />
+                <span onclick="toggleField('confirmPassword', 'toggleIconConfirm')"
+                      style="position:absolute;top:50%;right:0.85rem;transform:translateY(-50%);cursor:pointer;color:#9333ea;">
+                    <i class="bi bi-eye-slash" id="toggleIconConfirm"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+   
+    <div class="checkbox-container">
+        <p class="checkbox-title">Please confirm the following:</p>
+
+        <div class="form-check">
+            <input class="form-check-input custom-checkbox" type="checkbox" id="privacyCheck">
+            <label class="form-check-label" for="privacyCheck">
+                I agree to the processing of personal data according to
+                <a href="/Home/Privacy" target="_blank">Privacy Policy</a>
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input custom-checkbox" type="checkbox" id="nameCheck">
+            <label class="form-check-label" for="nameCheck">
+                I acknowledge my name is correct and I authorize government-issued identification verification
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input custom-checkbox" type="checkbox" id="promoCheck">
+            <label class="form-check-label" for="promoCheck">
+                I agree to receive news, updates, promotions, surveys, and other communications from Apparcus via phone and email
+            </label>
+        </div>
+    </div>
+
+    <!-- Warning message if not all checked -->
+    <div id="checkboxWarning" class="alert alert-danger small py-2 text-center mb-3" style="display:none; border-radius:8px;" role="alert">
+        Please confirm all items above to create your account.
+    </div>
+    <button type="submit" id="submit_btn" style="background-color:#9333ea; color:white;" onclick="registerUser()" class="btn w-100 mb-3">Sign Up</button>
+    <p class="text-center mt-4">
+        Already have an account? <a asp-action="Login" class="fw-semibold">Sign In</a>
+    </p>
+</div>
+
+

@@ -1,0 +1,197 @@
+﻿@using Core.ViewModels
+@model Core.ViewModels.IPageListModel<ApplicationUserViewModel>
+@{
+    ViewData["Title"] = "Users";
+	Layout = ViewBag.Layout;
+}
+
+<style>
+
+	body {
+		counter-reset: Serial; /* / Set the Serial counter to 0 /*/
+	}
+
+	tr td:first-child:before {
+		counter-increment: Serial; /* / Increment the Serial counter /*/
+		content: counter(Serial); /*  / Display the counter /*/
+	}
+</style>
+
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+	<div class="content">
+		<!-- Breadcrumb -->
+		<div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+			<div class="my-auto mb-2">
+				<h2 class="mb-1">Users</h2>
+				<nav>
+					<ol class="breadcrumb mb-0">
+						<li class="breadcrumb-item">
+							<a href="javascript:void(0);"><i class="ti ti-smart-home"></i></a>
+						</li>
+						<li class="breadcrumb-item">
+							Dashboard
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">User</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="d-flex my-xl-auto right-content align-items-center flex-wrap ">
+				<div class="mb-2">
+					<a href="#" data-bs-toggle="modal" data-bs-target="#add_user" class="btn btn-primary d-flex align-items-center"><i class="ti ti-circle-plus me-2"></i>Register</a>
+				</div>
+			</div>
+		</div>
+		<!-- /Breadcrumb -->
+		@await Html.PartialAsync("_PageSearcher", Model)
+		<!-- Clients list -->
+		<div class="card-box">
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead class="thead-light">
+							<tr>
+								<th>S/N</th>
+								<th>Full Name</th>
+								<th>Email</th>
+								<th>Phone Number</th>
+								<th>Date Joined</th>
+								<th>Account Number</th>
+                                <th>Account Name</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							@if (Model != null && Model.Model.Count() > 0)
+							{
+								@foreach (var applicationUser in Model.Model)
+								{
+									<tr>
+										<td></td>
+										<td>
+											@applicationUser.FullName
+											@if (applicationUser.IsAdmin)
+											{
+												<span class="badge bg-primary ms-2" style="font-size: 0.7rem;">Admin</span>
+											}
+											@if (applicationUser.IsVerified)
+											{
+												<span class="badge bg-success ms-2" style="font-size: 0.7rem;">Verified</span>
+											}
+										</td>
+										<td>@applicationUser.Email</td>
+										<td>@applicationUser.PhoneNumber</td>
+										<td>@applicationUser.DateRegistered?.ToString("dd/MMM/yyyy")</td>
+										<td>@applicationUser.AccountNumber</td>
+										<td>@applicationUser.AccountName</td>
+										<td>
+											<div class="action-icon d-inline-flex">
+												<a href="javascript:void(0);" onclick="openMakeAdminModal('@applicationUser.Id')" title="Make Admin">
+													<i class="ti ti-shield-check"></i>
+												</a>
+												<a href="javascript:void(0);" onclick="openRemoveAdminModal('@applicationUser.Id')" title="Remove as Admin">
+													<i class="ti ti-shield-x"></i>
+												</a>
+												<a href="javascript:void(0);" onclick="openChangePasswordModal('@applicationUser.Id')" title="Change Password"><i class="ti ti-lock-open"></i></a>
+												<a href="javascript:void(0);" onclick="openDeleteUserModal('@applicationUser.Id')" title="Delete"><i class="ti ti-trash"></i></a>
+											</div>
+										</td>
+									</tr>
+								}
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- /Clients list -->
+	</div>
+	@await Html.PartialAsync("_Pager", Model?.Model)
+</div>
+<!-- /Page Wrapper -->
+@await Html.PartialAsync("_AddUserModal")
+<!-- Delete Modal -->
+<div class="modal fade" id="delete_modal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+            <input type="hidden" id="userIdToDelete" />
+			<div class="modal-body text-center">
+				<span class="avatar avatar-xl bg-transparent-danger text-danger mb-3">
+					<i class="ti ti-trash-x fs-36"></i>
+				</span>
+				<h4 class="mb-1">Confirm Delete</h4>
+				<p class="mb-3">You want to delete all the marked items, this cant be undone once you delete.</p>
+				<div class="d-flex justify-content-center">
+					<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</a>
+					<a href="#" class="btn btn-danger" onclick="deleteUsers()">Yes, Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Delete Modal -->
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="change_password_modal">
+	<div class="modal-dialog modal-dialog-centered modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Change Password</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<i class="ti ti-x"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<input type="hidden" id="userIdForPassword" />
+				<div class="mb-3">
+					<label class="form-label">New Password</label>
+					<input type="password" class="form-control" id="newPassword" placeholder="Enter new password" />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-light border me-2" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" id="change_pass_btn" class="btn btn-primary" onclick="changePassword()">Change</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Make admin Modal -->
+<div class="modal fade" id="makeAdmin_modal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body text-center">
+				<span class="avatar avatar-xl bg-transparent-warning text-warning mb-3">
+					<i class="ti ti-shield-check fs-36"></i>
+				</span>
+				<h4 class="mb-1">Make Admin</h4>
+				<input type="hidden" id="userIdToMakeId" />
+				<p class="mb-3">Are you sure you want to make this user an admin</p>
+				<div class="d-flex justify-content-center">
+					<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</a>
+					<a onclick="makeUserAdmin()" class="btn btn-warning">Proceed</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /Make admin Modal -->
+<!-- Remove Admin Modal -->
+<div class="modal fade" id="removeAdmin_modal">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body text-center">
+				<span class="avatar avatar-xl bg-transparent-danger text-danger mb-3">
+					<i class="ti ti-shield-x fs-36"></i>
+				</span>
+				<h4 class="mb-1">Remove Admin</h4>
+				<input type="hidden" id="userIdToRemoveId" />
+				<p class="mb-3">Are you sure you want to remove this user as admin?</p>
+				<div class="d-flex justify-content-center">
+					<a href="javascript:void(0);" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</a>
+					<a onclick="removeUserAdmin()" class="btn btn-danger">Proceed</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

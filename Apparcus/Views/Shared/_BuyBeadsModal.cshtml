@@ -1,0 +1,24 @@
+﻿<div class="modal fade" id="buyBeadsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buy Beads</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-3">
+                    Buy 50 Beads for ₦50 from your Personal Account balance.
+                    Beads can be used to cover withdrawal charges when you're out of free withdrawal points.
+                </p>
+
+                <div class="alert alert-secondary small mb-3">
+                    Personal Account balance: ₦<span id="buyBeadsPersonalBalanceDisplay">--</span>
+                </div>
+
+                <button type="button" onclick="buyBeads()" class="btn btn-success w-100" id="buyBeadsBtn">
+                    Buy 50 Beads for ₦50
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

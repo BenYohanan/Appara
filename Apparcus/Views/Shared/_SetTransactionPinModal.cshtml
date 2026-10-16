@@ -1,0 +1,47 @@
+﻿<div class="modal fade" id="setTransactionPinModal" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Set Transaction Pin</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body">
+				
+				<div class="mb-3">
+					<label class="form-label">Transaction Pin</label>
+					<div class="input-group">
+						<input type="password" id="setTransactionPin" class="form-control" placeholder="Enter 6-digit PIN">
+
+						<button type="button"
+								class="btn btn-outline-secondary"
+								id="setTogglePin">
+							<i class="ti ti-eye"></i>
+						</button>
+					</div>
+				</div>
+
+				<button class="btn btn-primary w-100" onclick="setTransactionPin()" id="setPinBtn" type="button">
+					Create
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	document.getElementById('setTogglePin').addEventListener('click', function () {
+
+		const pinInput = document.getElementById('setTransactionPin');
+		const icon = this.querySelector('i');
+
+		if (pinInput.type === 'password') {
+			pinInput.type = 'text';
+			icon.classList.remove('ti-eye');
+			icon.classList.add('ti-eye-off');
+		} else {
+			pinInput.type = 'password';
+			icon.classList.remove('ti-eye-off');
+			icon.classList.add('ti-eye');
+		}
+	});
+</script>

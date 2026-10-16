@@ -1,0 +1,161 @@
+﻿@model Core.Models.ApplicationUser
+@{
+    ViewData["Title"] = "Profile";
+    Layout = ViewBag.Layout;
+}
+
+<div class="page-wrapper">
+    <div class="content">
+
+        <!-- Breadcrumb -->
+        <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+            <div class="my-auto mb-2">
+                <h2 class="mb-1">Profile</h2>
+                <nav>
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="/User/Index"><i class="ti ti-smart-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- /Breadcrumb -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    successAlertWithRedirect("@TempData["SuccessMessage"]", window.location.href);
+                });
+            </script>
+        }
+
+        <div class="card">
+            <div class="card-body">
+                <div class="border-bottom mb-3 pb-3">
+                    <h4>Profile</h4>
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    <div class="border-bottom mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>
+                                    <h6 class="mb-3">Basic Information</h6>
+                                    <div class="d-flex align-items-center flex-wrap row-gap-3 bg-light w-100 rounded p-3 mb-4">
+                                        <!-- Profile Photo Preview -->
+                                        <div class="d-flex align-items-center justify-content-center avatar avatar-xxl rounded-circle border border-dashed me-3 flex-shrink-0">
+                                            @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                                            {
+                                                <img id="previewImg" src="@Model.ProfilePictureUrl" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit:cover;">
+                                            }
+                                            else
+                                            {
+                                                <img id="previewImg" src="~/template/assets/img/profiles/avatar-12.jpg" alt="Profile" class="rounded-circle w-100 h-100" style="object-fit:cover;">
+                                            }
+                                        </div>
+
+                                        <div class="profile-upload">
+                                            <div class="profile-uploader d-flex align-items-center">
+                                                <div class="drag-upload-btn btn btn-sm btn-primary me-2">
+                                                    Upload
+                                                    <input type="file" name="file" id="avatarInput" accept="image/*" class="form-control image-sign">
+                                                </div>
+                                                <button type="button" id="removePhoto" class="btn btn-light btn-sm">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label mb-md-0">First Name</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="FirstName" class="form-control" value="@Model.FirstName" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label mb-md-0">Last Name</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="LastName" class="form-control" value="@Model.LastName" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label mb-md-0">Email</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="email" class="form-control" value="@Model.Email" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label mb-md-0">Phone</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="PhoneNumber" class="form-control" value="@Model.PhoneNumber">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-end gap-3">
+                        <a href="/User/Index" class="btn btn-outline-light border">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('avatarInput')?.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const newSrc = e.target.result;
+
+                document.getElementById('previewImg')?.setAttribute('src', newSrc);
+                document.getElementById('headerAvatar')?.setAttribute('src', newSrc);
+                document.getElementById('dropdownBigAvatar')?.setAttribute('src', newSrc);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('removePhoto')?.addEventListener('click', function () {
+        document.getElementById('avatarInput').value = '';
+        const defaultImg = '/template/assets/img/profiles/avatar-12.jpg';
+
+        document.getElementById('previewImg')?.setAttribute('src', defaultImg);
+        document.getElementById('headerAvatar')?.setAttribute('src', defaultImg);
+        document.getElementById('dropdownBigAvatar')?.setAttribute('src', defaultImg);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const timestamp = new Date().getTime();
+        const header = document.getElementById('headerAvatar');
+        const dropdown = document.getElementById('dropdownBigAvatar');
+
+        if (header) header.src = header.src.split('?')[0] + '?t=' + timestamp;
+        if (dropdown) dropdown.src = dropdown.src.split('?')[0] + '?t=' + timestamp;
+    });
+</script>
+

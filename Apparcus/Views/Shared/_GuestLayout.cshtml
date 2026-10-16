@@ -1,0 +1,244 @@
+﻿@{
+	var randomStr = DateTime.Now.ToString().ToLower().Replace(":", "").Replace("pm", "").Replace("am", "");
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewData["Title"] | Apparcus - Organized Group Ledger</title>
+
+	<meta name="description" content="Apparcus - The secure way to contribute. Eliminate manual errors and give your Financial Secretary perfect records with instant, real-time verification.">
+	<meta name="keywords" content="The secure way to contribute. Eliminate manual errors and give your Financial Secretary perfect records with instant, real-time verification.">
+	<meta name="author" content="Ben Yohanan">
+	<meta name="robots" content="index, follow">
+
+	<!-- Apple Touch Icon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="~/template/assets/img/apple-touch-icon.png">
+
+	<!-- Favicon -->
+	<link href="~/leadpage/assets/img/Apparcus logo.jpg" rel="icon">
+	<link href="~/leadpage/assets/img/Apparcus logo.jpg" rel="apple-touch-icon">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="~/template/assets/css/bootstrap.min.css">
+
+	<!-- Feather CSS -->
+	<link rel="stylesheet" href="~/template/assets/plugins/icons/feather/feather.css">
+
+	<!-- Tabler Icon CSS -->
+	<link rel="stylesheet" href="~/template/assets/plugins/tabler-icons/tabler-icons.css">
+
+	<!-- Select2 CSS -->
+	<link rel="stylesheet" href="~/template/assets/plugins/select2/css/select2.min.css">
+
+	<!-- Fontawesome CSS -->
+	<link rel="stylesheet" href="~/template/assets/plugins/fontawesome/css/fontawesome.min.css">
+	<link rel="stylesheet" href="~/template/assets/plugins/fontawesome/css/all.min.css">
+
+	<!-- Datetimepicker CSS -->
+	<link rel="stylesheet" href="~/template/assets/css/bootstrap-datetimepicker.min.css">
+
+	<!-- Datatable CSS -->
+	<link rel="stylesheet" href="~/template/assets/css/dataTables.bootstrap5.min.css">
+
+	<!-- Bootstrap Tagsinput CSS -->
+	<link rel="stylesheet" href="~/template/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css">
+
+	<!-- Summernote CSS -->
+	<link rel="stylesheet" href="~/template/assets/plugins/summernote/summernote-lite.min.css">
+
+	<!-- Daterangepikcer CSS -->
+	<link rel="stylesheet" href="~/template/assets/plugins/daterangepicker/daterangepicker.css">
+
+	<!-- Color Picker Css -->
+	<link rel="stylesheet" href="~/template/assets/plugins/flatpickr/flatpickr.min.css">
+	<link rel="stylesheet" href="~/template/assets/plugins/@@simonwep/pickr/themes/nano.min.css">
+	<link href="~/css/sweetalert2.css" rel="stylesheet" />
+	<!-- Main CSS -->
+	<link rel="stylesheet" href="~/template/assets/css/style.css">
+
+	<style>
+		.sidebar-logo img {
+			max-height: 30px;
+			width: auto;
+		}
+
+		.sidebar-logo h4 {
+			font-weight: 700;
+			font-size: 1.2rem;
+		}
+
+	</style>
+	<script>
+		function errorAlert(message) {
+			Swal.fire({
+				icon: 'error',
+				text: message,
+				timer: 60000,
+				confirmButtonColor: "#9333ea",
+			})
+		}
+
+		function infoAlert(message) {
+			Swal.fire({
+				icon: 'info',
+				text: message,
+				timer: 30000,
+				confirmButtonColor: "#9333ea",
+			})
+		}
+
+		function infoAlertWithStyles(message) {
+			Swal.fire({
+				title: 'Incomplete Payment',
+				icon: 'info',
+				text: message,
+				confirmButtonColor: "#9333ea",
+			})
+		}
+		function newInfoAlert(message, url) {
+			Swal.fire({
+				icon: 'info',
+				text: message,
+				timer: 30000,
+				confirmButtonColor: "#9333ea",
+			}).then((isConfirm) => {
+				if (isConfirm) {
+					location.href = url;
+				}
+			})
+		}
+		function successAlert(message) {
+			Swal.fire({
+				icon: 'success',
+				text: message,
+				timer: 30000,
+				confirmButtonColor: "#9333ea",
+			})
+		}
+
+		function newErrorAlert(message, url) {
+			Swal.fire({
+				icon: 'error',
+				text: message,
+				timer: 30000,
+				confirmButtonColor: "#9333ea",
+			}).then(function () {
+				location.href = url;
+			})
+		}
+
+		function newSuccessAlert(message, url) {
+			Swal.fire({
+				icon: 'success',
+				text: message,
+				confirmButtonColor: "#9333ea",
+			}).then((isConfirm) => {
+				if (isConfirm) {
+					location.reload(url);
+				}
+			})
+
+		}
+		function successAlertWithRedirect(message, url) {
+			Swal.fire({
+				title: "Success",
+				text: message,
+				icon: "success",
+				timer: 30000,
+				overlay: "background - color: rgba(43, 165, 137, 0.45)",
+				confirmButtonColor: "#9333ea",
+			}).then(function () {
+
+				location.href = url;
+			})
+		}
+
+		function successAlertWithFunction(message, action) {
+			Swal.fire({
+				title: "Success",
+				text: message,
+				icon: "success",
+				timer: 30000,
+				overlay: "background - color: rgba(43, 165, 137, 0.45)",
+				confirmButtonColor: "#9333ea",
+			}).then(function () {
+				action;
+			})
+		}
+	</script>
+</head>
+
+<body>
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		<div class="container-fluid">
+			<main role="main" class="pb-3">
+				@RenderBody()
+			</main>
+		</div>
+		<!-- /Header -->
+	</div>
+	<!-- /Main Wrapper -->
+	<!-- jQuery -->
+	<script src="~/template/assets/js/jquery-3.7.1.min.js"></script>
+
+	<!-- Bootstrap Core JS -->
+	<script src="~/template/assets/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Feather Icon JS -->
+	<script src="~/template/assets/js/feather.min.js"></script>
+
+	<!-- Slimscroll JS -->
+	<script src="~/template/assets/js/jquery.slimscroll.min.js"></script>
+
+
+	<!-- Datatable JS -->
+	<script src="~/template/assets/js/jquery.dataTables.min.js"></script>
+	<script src="~/template/assets/js/dataTables.bootstrap5.min.js"></script>
+
+
+	<!-- Chart JS -->
+	<script src="~/template/assets/plugins/apexchart/apexcharts.min.js"></script>
+	<script src="~/template/assets/plugins/apexchart/chart-data.js"></script>
+
+	<!-- Chart JS -->
+	<script src="~/template/assets/plugins/chartjs/chart.min.js"></script>
+	<script src="~/template/assets/plugins/chartjs/chart-data.js"></script>
+
+	<!-- Datetimepicker JS -->
+	<script src="~/template/assets/js/moment.js"></script>
+	<script src="~/template/assets/js/bootstrap-datetimepicker.min.js"></script>
+
+	<!-- Daterangepikcer JS -->
+	<script src="~/template/assets/plugins/daterangepicker/daterangepicker.js"></script>
+
+	<!-- Summernote JS -->
+	<script src="~/template/assets/plugins/summernote/summernote-lite.min.js"></script>
+
+	<!-- Bootstrap Tagsinput JS -->
+	<script src="~/template/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+
+	<!-- Select2 JS -->
+	<script src="~/template/assets/plugins/select2/js/select2.min.js"></script>
+
+	<!-- Color Picker JS -->
+	<script src="~/template/assets/plugins/@@simonwep/pickr/pickr.es5.min.js"></script>
+
+	<!-- Custom JS -->
+	<script src="~/template/assets/js/todo.js"></script>
+	<script src="~/template/assets/js/theme-colorpicker.js"></script>
+    <script src="~/template/assets/js/script.js"></script>
+    <script src="~/js/signalr.min.js"></script>
+	<script src="~/js/sweetalert2.all.min.js"></script>
+	<script src="~/js/main.js?v=@randomStr"></script>
+	@RenderSection("Scripts", required: false)
+</body>
+
+</html>

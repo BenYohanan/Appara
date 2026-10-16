@@ -1,0 +1,494 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+    ViewData["Title"] = "Home";
+}
+<link rel="stylesheet" href="~/leadpage/assets/css/partners.css" />
+<section id="hero" class="hero section dark-background">
+    <div class="video-background">
+        <video autoplay muted loop playsinline>
+            <source src="~/leadpage/assets/img/video/video-2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <div class="hero-content">
+        <div class="container position-relative text-center">
+            <div class="col-lg-8 mx-auto">
+                <h1 data-aos="fade-up" data-aos-delay="100">
+                    The secure way <br><span style="color:#9333ea">To contribute</span>
+                </h1>
+                <p data-aos="fade-up" data-aos-delay="200" class="lead">
+                    Eliminate manual errors and give your Financial Secretary perfect records with instant, real-time verification.
+                </p>
+                <div class="hero-search" data-aos="fade-up" data-aos-delay="250">
+                    <label for="projectSearch" class="visually-hidden">Search for a project to contribute to</label>
+                    <div class="hero-search-box">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                        <input type="search"
+                               id="projectSearch"
+                               autocomplete="off"
+                               placeholder="Search for a project to contribute to&hellip;"
+                               aria-describedby="projectSearchHint"
+                               aria-controls="projectSearchResults"
+                               aria-expanded="false"
+                               role="combobox">
+                        <span class="hero-search-spinner" id="projectSearchSpinner" hidden></span>
+                    </div>
+                    <p class="hero-search-hint" id="projectSearchHint">
+                        Type a project name to find it and contribute &mdash; no account needed.
+                    </p>
+                    <div class="hero-search-results" id="projectSearchResults" role="listbox" hidden></div>
+                </div>
+
+                <div class="hero-buttons" data-aos="fade-up" data-aos-delay="300">
+                    <a href="/Account/Register" class="btn btn-primary btn-lg">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="how" class="section py-5 bg-light">
+    <div class="container section-title text-center" data-aos="fade-up">
+        <span class="subtitle">Simple Steps</span>
+        <h2 class="fw-bold">How It Works</h2>
+        <p class="text-muted">Contribute in 3 easy steps — no stress, no travel.</p>
+    </div>
+
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card border-0 shadow-sm p-4 text-center h-100 hover-up">
+                    <div class="icon-circle mb-3 bg-primary text-white mx-auto">
+                        <i class="bi bi-people-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-semibold">1. Create or Join</h5>
+                    <p class="text-muted">Start a project or support an existing one with just a few taps.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card border-0 shadow-sm p-4 text-center h-100 hover-up">
+                    <div class="icon-circle mb-3 bg-success text-white mx-auto">
+                        <i class="bi bi-credit-card-2-front fs-3"></i>
+                    </div>
+                    <h5 class="fw-semibold">2. Pay Securely</h5>
+                    <p class="text-muted">Use SafeHaven — card, bank, or USSD. Safe, fast, and easy.</p>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card border-0 shadow-sm p-4 text-center h-100 hover-up">
+                    <div class="icon-circle mb-3 bg-warning text-white mx-auto">
+                        <i class="bi bi-check-circle-fill fs-3"></i>
+                    </div>
+                    <h5 class="fw-semibold">3. Done!</h5>
+                        <p class="text-muted">Funds reach the organizer in less than 24 hours. That’s it!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .hover-up {
+            transition: all 0.3s ease;
+        }
+
+            .hover-up:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            }
+    </style>
+</section>
+<section id="why" class="section py-5">
+    <div class="container section-title text-center" data-aos="fade-up">
+        <span class="subtitle">Trusted Nationwide</span>
+        <h2 class="fw-bold">Why People Love Apparcus</h2>
+    </div>
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="why-card text-center p-4">
+                    <i class="bi bi-bank2 fs-1 text-primary mb-3"></i>
+                    <h6 class="fw-semibold">Works in Nigeria</h6>
+                    <p class="text-muted">Supports all major banks and USSD for easy contributions.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="why-card text-center p-4">
+                    <i class="bi bi-shield-lock-fill fs-1 text-success mb-3"></i>
+                    <h6 class="fw-semibold">100% Secure</h6>
+                        <p class="text-muted">Built on SafeHaven secure infrastructure for your peace of mind.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="why-card text-center p-4">
+                    <i class="bi bi-lightning-charge-fill fs-1 text-warning mb-3"></i>
+                    <h6 class="fw-semibold">Instant Payouts</h6>
+                    <p class="text-muted">Receive funds in less than 24 hours after contribution.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="why-card text-center p-4">
+                    <i class="bi bi-phone-fill fs-1 text-danger mb-3"></i>
+                    <h6 class="fw-semibold">Mobile First</h6>
+                    <p class="text-muted">Optimized for mobile users.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .why-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+            .why-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            }
+    </style>
+</section>
+<section id="partners" class="section py-5" style="background: #f8f9ff; overflow:hidden;">
+    <div class="container text-center mb-4" data-aos="fade-up">
+        <p class="text-uppercase fw-semibold ls-wide"
+           style="color:#9333ea; letter-spacing:3px; font-size:0.8rem;">
+            ✦ Trusted & Backed By ✦
+        </p>
+        <h2 class="fw-bold">Our Partners</h2>
+        <p class="text-muted">Nigeria's most trusted financial institutions back us.</p>
+    </div>
+    <div class="partner-track-wrapper" data-aos="fade-up" data-aos-delay="100">
+        <div class="partner-track">
+            <a href="https://ndic.gov.ng" target="_blank" class="partner-pill">
+                <img src="~/leadpage/assets/img/partners/ndic.jpeg" alt="NDIC" />
+            </a>
+            <div class="partner-separator">✦</div>
+            <a href="https://www.cbn.gov.ng" target="_blank" class="partner-pill">
+                <img src="~/leadpage/assets/img/partners/cbn.jpeg" alt="Central Bank of Nigeria" />
+            </a>
+            <div class="partner-separator">✦</div>
+            <a href="https://safehavenmfb.com" target="_blank" class="partner-pill">
+                <img src="~/leadpage/assets/img/partners/safehaven.jpeg" alt="Safe Haven MFB" />
+            </a>
+            <div class="partner-separator">✦</div>
+            <a href="https://ndic.gov.ng" target="_blank" class="partner-pill">
+                <img src="~/leadpage/assets/img/partners/ndic.jpeg" alt="NDIC" />
+            </a>
+            <div class="partner-separator">✦</div>
+            <a href="https://www.cbn.gov.ng" target="_blank" class="partner-pill">
+                <img src="~/leadpage/assets/img/partners/cbn.jpeg" alt="Central Bank of Nigeria" />
+            </a>
+            <div class="partner-separator">✦</div>
+            <a href="https://safehavenmfb.com" target="_blank" class="partner-pill">
+                <img src="~/leadpage/assets/img/partners/safehaven.jpeg" alt="Safe Haven MFB" />
+            </a>
+            <div class="partner-separator">✦</div>
+        </div>
+    </div>
+</section>
+<section id="testimonials" class="section py-5 bg-light">
+    <div class="container">
+        <div class="section-title text-center mb-4" data-aos="fade-up">
+            <h2 class="fw-bold">What People Say</h2>
+                <p class="text-muted">Real stories from Nigerians using Apparcus every day.</p>
+        </div>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="testimonial-card p-4 text-start">
+                                <div class="stars mb-2">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="fs-6 text-muted">
+                                        Apparcus made it so easy to support my sister's wedding. No travel, no hassle!
+                                </p>
+                                <strong>Chinedu Okafor</strong><br>
+                                <small class="text-muted">March 15, 2024</small>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="testimonial-card p-4 text-start">
+                                <div class="stars mb-2">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="fs-6 text-muted">
+                                    I contributed to a church project from my phone. It was seamless and fast!
+                                </p>
+                                <strong>Funke Adebayo</strong><br>
+                                <small class="text-muted">April 02, 2024</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="testimonial-card p-4 text-start">
+                                <div class="stars mb-2">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="fs-6 text-muted">
+                                    Contributed to school fees for my cousin in Lagos. Super quick and reliable!
+                                </p>
+                                <strong>Tunde Balogun</strong><br>
+                                <small class="text-muted">May 18, 2024</small>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="testimonial-card p-4 text-start">
+                                <div class="stars mb-2">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="fs-6 text-muted">
+                                    Funeral contributions for a friend’s family were made easy. No stress at all.
+                                </p>
+                                <strong>Aisha Suleiman</strong><br>
+                                <small class="text-muted">June 09, 2024</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="testimonial-card p-4 text-start">
+                                <div class="stars mb-2">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="fs-6 text-muted">
+                                        The platform is secure and mobile-friendly. Loved using Apparcus for family support.
+                                </p>
+                                <strong>Emeka Nwosu</strong><br>
+                                <small class="text-muted">July 20, 2024</small>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="testimonial-card p-4 text-start">
+                                <div class="stars mb-2">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                                <p class="fs-6 text-muted">
+                                    I can now support loved ones without leaving my house. Brilliant service!
+                                </p>
+                                <strong>Halima Abubakar</strong><br>
+                                <small class="text-muted">August 05, 2024</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <style>
+        .testimonial-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .testimonial-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+
+        .stars i {
+            color: #FFD700; /* Yellow stars */
+            font-size: 1rem;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-size: 50% 50%;
+        }
+    </style>
+</section>
+
+<style>
+    .hero-search { max-width: 620px; margin: 0 auto 26px; position: relative; text-align: left; }
+
+    .hero-search-box {
+        display: flex; align-items: center; gap: 12px;
+        background: rgba(255, 255, 255, .97);
+        border-radius: 999px; padding: 6px 8px 6px 22px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, .28);
+    }
+
+    .hero-search-box i { color: #6b7280; font-size: 18px; flex: none; }
+
+    .hero-search-box input {
+        flex: 1; border: 0; outline: 0; background: transparent;
+        font-size: 16px; padding: 14px 0; color: #15161e; min-width: 0;
+    }
+
+    .hero-search-box input::placeholder { color: #9ca3af; }
+
+    .hero-search-box input:focus-visible { outline: 0; }
+    .hero-search-box:focus-within { box-shadow: 0 0 0 3px rgba(147, 51, 234, .45), 0 12px 40px rgba(0, 0, 0, .28); }
+
+    .hero-search-spinner {
+        width: 18px; height: 18px; margin-right: 14px; flex: none;
+        border: 2px solid #e5e7eb; border-top-color: #9333ea;
+        border-radius: 50%; animation: heroSpin .7s linear infinite;
+    }
+
+    @@keyframes heroSpin { to { transform: rotate(360deg); } }
+    @@media (prefers-reduced-motion: reduce) { .hero-search-spinner { animation-duration: 2s; } }
+
+    .hero-search-hint { color: rgba(255, 255, 255, .82); font-size: 13.5px; margin: 10px 4px 0; }
+
+    .hero-search-results {
+        position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 30;
+        background: #fff; border-radius: 16px; overflow: hidden auto; max-height: 340px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, .3); text-align: left;
+    }
+
+    .hero-result {
+        display: block; padding: 14px 20px; border-bottom: 1px solid #f0f0f5;
+        text-decoration: none; color: inherit;
+    }
+
+    .hero-result:last-child { border-bottom: 0; }
+    .hero-result:hover, .hero-result:focus-visible { background: #faf5ff; outline: none; }
+
+    .hero-result-name { font-weight: 600; font-size: 15px; color: #15161e; }
+    .hero-result-desc { font-size: 13px; color: #6b7280; margin: 3px 0 0; }
+    .hero-result-meta { font-size: 12.5px; color: #9333ea; margin: 6px 0 0; font-weight: 600; }
+    .hero-result-empty { padding: 18px 20px; color: #6b7280; font-size: 14px; }
+</style>
+
+<script>
+    (function () {
+        var input    = document.getElementById('projectSearch');
+        var results  = document.getElementById('projectSearchResults');
+        var spinner  = document.getElementById('projectSearchSpinner');
+        if (!input || !results) return;
+
+        var timer = null;
+        var lastQuery = '';
+        var naira = new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 });
+
+        function close() {
+            results.hidden = true;
+            results.innerHTML = '';
+            input.setAttribute('aria-expanded', 'false');
+        }
+
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function render(items) {
+            if (!items.length) {
+                results.innerHTML = '<p class="hero-result-empty">No public project matches that name.</p>';
+            } else {
+                results.innerHTML = items.map(function (p) {
+                    // A code-protected project comes back without its figures.
+                    // Say a code is needed instead of rendering a false zero.
+                    // A record sheet is raising towards nothing, so there is no
+                    // target to show progress against.
+                    var meta = p.hasAccessCode
+                        ? 'Code required &mdash; ask your project rep'
+                        : p.type === 'B'
+                            ? 'Record sheet &mdash; ' + naira.format(p.amountObtained || 0) + ' recorded'
+                            : naira.format(p.amountObtained || 0) + ' raised of ' + naira.format(p.amountNeeded || 0);
+
+                    return '<a class="hero-result" role="option" href="' + escapeHtml(p.url) + '">' +
+                           '<span class="hero-result-name">' + escapeHtml(p.name) + '</span>' +
+                           (p.description ? '<p class="hero-result-desc">' + escapeHtml(p.description) + '</p>' : '') +
+                           '<p class="hero-result-meta">' + meta + '</p>' +
+                           '</a>';
+                }).join('');
+            }
+            results.hidden = false;
+            input.setAttribute('aria-expanded', 'true');
+        }
+
+        function search(query) {
+            spinner.hidden = false;
+
+            fetch('/Guest/Search?q=' + encodeURIComponent(query), { headers: { 'Accept': 'application/json' } })
+                .then(function (r) { return r.json(); })
+                .then(function (body) {
+                    // A slow response for an old query must not overwrite a newer one.
+                    if (query !== lastQuery) return;
+                    render((body && body.data) || []);
+                })
+                .catch(function () {
+                    if (query !== lastQuery) return;
+                    results.innerHTML = '<p class="hero-result-empty">Search is unavailable right now. Please try again.</p>';
+                    results.hidden = false;
+                })
+                .finally(function () { spinner.hidden = true; });
+        }
+
+        input.addEventListener('input', function () {
+            var query = input.value.trim();
+            lastQuery = query;
+            clearTimeout(timer);
+
+            // Two characters is the floor — one letter matches nearly everything
+            // and just leaks the catalogue.
+            if (query.length < 2) { spinner.hidden = true; close(); return; }
+
+            timer = setTimeout(function () { search(query); }, 250);
+        });
+
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { close(); input.blur(); }
+            if (e.key === 'ArrowDown' && !results.hidden) {
+                var first = results.querySelector('.hero-result');
+                if (first) { e.preventDefault(); first.focus(); }
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!results.hidden && !results.contains(e.target) && e.target !== input) close();
+        });
+    })();
+</script>

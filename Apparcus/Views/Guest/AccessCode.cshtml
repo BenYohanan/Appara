@@ -1,0 +1,108 @@
+@{
+    ViewData["Title"] = "Enter Project Code";
+    Layout = "~/Views/Shared/_GuestLayout.cshtml";
+
+    var projectId = (int)ViewBag.ProjectId;
+    var projectName = ViewBag.ProjectName as string;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card">
+                <div class="card-body p-4 text-center">
+                    <div class="mb-3">
+                        <i class="ti ti-lock text-primary" style="font-size: 56px;"></i>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(projectName))
+                    {
+                        <h4 class="mb-1">@projectName</h4>
+                    }
+
+                    <p class="text-muted mb-4">
+                        Kindly reach out to your Project Rep to get the code.
+                    </p>
+
+                    @* Posted rather than fetched with the code in the URL, so the
+                       code stays out of browser history and server access logs. *@
+                    <form id="accessCodeForm" autocomplete="off">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@projectId">
+
+                        <label class="form-label" for="accessCodeInput">Input Code</label>
+                        <input type="text" class="form-control form-control-lg text-center"
+                               id="accessCodeInput" name="code"
+                               inputmode="numeric" pattern="[0-9]*" maxlength="4"
+                               autocomplete="one-time-code"
+                               placeholder="••••"
+                               style="letter-spacing: 0.6em; font-size: 1.6rem;">
+
+                        <p class="text-danger small mt-2 mb-0 d-none" id="accessCodeError"></p>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-3" id="accessCodeSubmit" disabled>
+                            Continue
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <p class="text-center text-muted small mt-3">
+                The code keeps this project's details with the people it was announced to.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var form   = document.getElementById('accessCodeForm');
+        var input  = document.getElementById('accessCodeInput');
+        var submit = document.getElementById('accessCodeSubmit');
+        var error  = document.getElementById('accessCodeError');
+
+        function showError(message) {
+            error.textContent = message;
+            error.classList.remove('d-none');
+        }
+
+        input.addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
+            submit.disabled = this.value.length !== 4;
+            error.classList.add('d-none');
+        });
+
+        input.focus();
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            submit.disabled = true;
+            submit.textContent = 'Checking...';
+
+            fetch('/Guest/VerifyAccessCode', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: new FormData(form)
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (body) {
+                    if (body && !body.isError && body.returnUrl) {
+                        window.location.href = body.returnUrl;
+                        return;
+                    }
+
+                    showError((body && body.msg) || 'That code is not correct.');
+                    input.value = '';
+                    submit.disabled = true;
+                    submit.textContent = 'Continue';
+                    input.focus();
+                })
+                .catch(function () {
+                    showError('We could not check that code. Please try again.');
+                    submit.disabled = false;
+                    submit.textContent = 'Continue';
+                });
+        });
+    })();
+</script>

@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Payment Successful";
+    Layout = "~/Views/Shared/_GuestLayout.cshtml";
+}
+
+<div class="container py-5 text-center">
+    <div class="mb-4">
+        <i class="ti ti-check text-success" style="font-size: 80px;"></i>
+    </div>
+    <h2>Payment Received!</h2>
+    <p>We're verifying your contribution. This takes a few seconds...</p>
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-4 text-muted">Do not close or refresh this page.</p>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const reference = urlParams.get('reference');
+
+    if (reference) {
+        fetch('/api/payment/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reference: reference })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.isError) {
+                var url = `/Home/Index`;
+                successAlertWithRedirect(data.msg,url);
+            } else {
+                errorAlert("Payment failed or already recorded.");
+                 window.location.href = `/Home/Index`;
+            }
+        })
+        .catch(() => {
+            alert("Network error. Contact support with reference: " + reference);
+        });
+    } else {
+        errorAlert("No payment reference found.");
+        window.location.href = "/";
+    }
+</script>

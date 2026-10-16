@@ -1,0 +1,40 @@
+﻿@model Core.ViewModels.ProjectViewModel
+
+@* Shared by the table (desktop) and the card list (mobile) on Project/TypeB,
+   so the two cannot fall out of step as actions are added. *@
+<ul class="dropdown-menu dropdown-menu-end">
+    <li>
+        @* Named for what it opens. A Type-B project holds records of money
+           already paid, not contributors still being collected from. *@
+        <a class="dropdown-item rounded-1" asp-action="Supporters" asp-controller="Project" asp-route-projectId="@Model.Id">
+            <i class="ti ti-list-details me-2"></i>View Records
+        </a>
+    </li>
+    <li>
+        <a class="dropdown-item rounded-1" href="javascript:void(0);"
+           onclick="openAddRecord(@Model.Id, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Name)))"
+           data-bs-toggle="modal" data-bs-target="#add_record">
+            <i class="ti ti-circle-plus me-2"></i>Add Record
+        </a>
+    </li>
+    <li>
+        <a class="dropdown-item rounded-1" href="javascript:void(0);"
+           onclick="getTypeBProjectById(@Model.Id)"
+           data-bs-toggle="modal" data-bs-target="#edit_type_b">
+            <i class="ti ti-edit me-2"></i>Edit Project
+        </a>
+    </li>
+    <li>
+        <a class="dropdown-item rounded-1" href="javascript:void(0);"
+           onclick="shareTypeB(@Model.Id)">
+            <i class="ti ti-share me-2"></i>Share
+        </a>
+    </li>
+    <li>
+        <a class="dropdown-item rounded-1 text-danger" href="javascript:void(0);"
+           onclick="confirmDeleteProject(@Model.Id)"
+           data-bs-toggle="modal" data-bs-target="#delete_type_b">
+            <i class="ti ti-trash me-2"></i>Delete
+        </a>
+    </li>
+</ul>

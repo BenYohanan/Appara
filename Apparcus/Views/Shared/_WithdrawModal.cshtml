@@ -1,0 +1,117 @@
+﻿@model int;
+
+<div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="withdrawModalLabel">Withdraw Funds</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="withdrawProjectId" value="@Model">
+                <input type="hidden" id="sessionId" value="">
+
+                @if (ViewBag.FreeWithdrawalsRemaining != null && (int)ViewBag.FreeWithdrawalsRemaining > 0)
+                {
+                    <div class="alert alert-success small mb-3">
+                        You have <strong>@ViewBag.FreeWithdrawalsRemaining</strong> free withdrawal(s) left on this project.
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning small mb-3">
+                        No free withdrawals remaining on this project. A ₦15 fee applies (covered by your Beads if available, otherwise deducted from the project balance).
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <label class="form-label">Select Bank</label>
+                    <select style="width:100%;" onchange="verifyAccount()" id="bankCode" asp-items="@(new SelectList(ViewBag?.Banks, "code", "name"))" class="form-control select2"> </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Account Number (10 digits)</label>
+                    <input type="text" id="accountNumber" onchange="verifyAccount()" class="form-control" placeholder="Enter 10-digit account number" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Account Name</label>
+                    <input type="text" id="accountHolderName" class="form-control" disabled readonly placeholder="Will auto-fill after verification">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Amount (₦)</label>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <small class="text-muted">
+                            Available for this project: ₦<span id="availableBalanceDisplay">--</span>
+                        </small>
+                        <button type="button" class="btn btn-link btn-sm p-0" id="withdrawAllBtn">
+                            Withdraw all
+                        </button>
+                    </div>
+                    <input type="number" id="withdrawAmount" class="form-control" min="100" value="0" placeholder="Enter amount to withdraw" required>
+                    <small id="amountPreview" class="form-text d-block mt-1" style="display:none;"></small>
+                </div>
+
+                <div id="buyBeadsPromptFromWithdraw" class="alert alert-warning small d-flex justify-content-between align-items-center mb-3 d-none">
+                    <span>Insufficient Beads for a fee-free withdrawal from your project balance.</span>
+                    <button type="button" class="btn btn-sm btn-warning" id="goToBuyBeadsBtn">
+                        Buy 50 Beads for ₦50
+                    </button>
+                </div>
+
+                <div id="withdrawConsentBox" class="form-check mb-3 d-none">
+                    <input class="form-check-input" type="checkbox" id="withdrawConsentCheckbox">
+                    <label class="form-check-label small" for="withdrawConsentCheckbox">
+                        I understand a portion of this withdrawal will be deducted to cover the bank charge, and I want to proceed.
+                    </label>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Transaction PIN</label>
+
+                    <div class="input-group">
+                        <input type="password"
+                               class="form-control"
+                               id="transactionPin"
+                               name="TransactionPin"
+                               maxlength="6"
+                               pattern="[0-9]{6}"
+                               placeholder="Enter 6-digit PIN"
+                               oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                               required>
+
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                id="togglePin">
+                            <i class="ti ti-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="withdrawMessage" class="alert alert-info small mb-3" style="display:none;"></div>
+
+                <button type="button" onclick="withdraw()" class="btn btn-primary w-100" id="withdrawBtn">
+                    Withdraw
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('togglePin').addEventListener('click', function () {
+
+        const pinInput = document.getElementById('transactionPin');
+        const icon = this.querySelector('i');
+
+        if (pinInput.type === 'password') {
+            pinInput.type = 'text';
+            icon.classList.remove('ti-eye');
+            icon.classList.add('ti-eye-off');
+        } else {
+            pinInput.type = 'password';
+            icon.classList.remove('ti-eye-off');
+            icon.classList.add('ti-eye');
+        }
+    });
+</script>

@@ -1,0 +1,202 @@
+@using Core.ViewModels
+@model Core.ViewModels.IPageListModel<SupporterViewModel>
+@{
+    Layout = ViewBag.Layout;
+
+    var isTypeB = ViewBag.IsTypeB as bool? ?? false;
+
+    // A Type-B project holds records of money already paid elsewhere, so the
+    // page has to read as a record sheet rather than as a list of people still
+    // being chased for a pledge.
+    var peopleLabel = isTypeB ? "Records" : "Supporters";
+    var backAction = isTypeB ? "TypeB" : "Index";
+    var backLabel = isTypeB ? "Back to Type-B" : "Back to Projects";
+
+    ViewData["Title"] = isTypeB ? "Project Records" : "Project Supporters";
+}
+
+<style>
+    body {
+        counter-reset: Serial;
+    }
+
+    tr td:first-child:before {
+        counter-increment: Serial;
+        content: counter(Serial);
+    }
+</style>
+<div class="page-wrapper">
+    <div class="content">
+        <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+            <div class="my-auto mb-2">
+                <h2 class="mb-1">@peopleLabel for "@ViewBag.ProjectTitle"</h2>
+                <nav>
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0);"><i class="ti ti-smart-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-action="@backAction" asp-controller="Project">@(isTypeB ? "Type-B" : "Projects")</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">@peopleLabel</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex my-xl-auto right-content align-items-center flex-wrap ">
+                <div class="mb-2">
+                    <a asp-action="@backAction" asp-controller="Project" class="btn btn-primary d-flex align-items-center">
+                        <i class="ti ti-arrow-left me-2"></i>@backLabel
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @await Html.PartialAsync("_PageSearcher", Model)
+
+        <div class="card-box d-none d-md-block">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>S/N</th>
+                                <th>Full Name</th>
+                                <th>Custom Fields</th>
+                                <th>Phone Number</th>
+                                <th>Amount</th>
+                                @* Every Type-B row is money already paid, so a
+                                   status column would say "Successful" all the
+                                   way down and tell the owner nothing. *@
+                                @if (!isTypeB)
+                                {
+                                    <th>Status</th>
+                                }
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Model?.Any() == true)
+                            {
+                                foreach (var s in Model.Model)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span>@s.FullName</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (s.CustomFields.Any())
+                                            {
+                                                <ul class="list-unstyled mb-0">
+                                                    @foreach (var field in s.CustomFields)
+                                                    {
+                                                        <li>
+                                                            <strong>@field.FieldName:</strong> @field.Value
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </td>
+                                        <td>@s.PhoneNumber</td>
+                                        <td><span class="badge bg-success">₦@((s.Amount ?? 0).ToString("N2"))</span></td>
+                                        @if (!isTypeB)
+                                        {
+                                            <td>@(s.PaymentStatusInString ?? "Pending")</td>
+                                        }
+                                        <td>@s.DateCreated?.ToString("dd-MMM-yyyy")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="@(isTypeB ? 6 : 7)" class="text-center text-muted py-4">
+                                        @(isTypeB ? "No records on this project yet." : "No supporters yet for this project.")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-block d-md-none">
+            <div class="row">
+                @if (Model.Model?.Any() == true)
+                {
+                    foreach (var s in Model.Model)
+                    {
+                        <div class="col-12 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start justify-content-between mb-2">
+                                        <h6 class="text-truncate mb-0">@s.FullName</h6>
+                                        @if (!isTypeB)
+                                        {
+                                            <span class="badge badge-soft-secondary flex-shrink-0">
+                                                @(s.PaymentStatusInString ?? "Pending")
+                                            </span>
+                                        }
+                                    </div>
+
+                                    @* Only rendered when there is one to call:
+                                       a Type-B record often carries a name and
+                                       nothing else, and an empty "Phone" row
+                                       with a dead call link reads as a fault. *@
+                                    @if (!string.IsNullOrWhiteSpace(s.PhoneNumber))
+                                    {
+                                        <div class="d-flex align-items-center justify-content-between border-top pt-2">
+                                            <span class="fs-12 text-muted">Phone</span>
+                                            <a class="fs-12 fw-medium" href="tel:@s.PhoneNumber">@s.PhoneNumber</a>
+                                        </div>
+                                    }
+
+                                    <div class="d-flex align-items-center justify-content-between border-top pt-2 mt-2">
+                                        <span class="fs-12 text-muted">Date</span>
+                                        <span class="fs-12 fw-medium">@s.DateCreated?.ToString("dd MMM yyyy")</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-between border-top pt-2 mt-2">
+                                        <span class="fs-12 text-muted">@(isTypeB ? "Amount" : "Contributed")</span>
+                                        <span class="fs-12 fw-bold text-dark">₦@((s.Amount ?? 0).ToString("N2"))</span>
+                                    </div>
+
+                                    @if (s.CustomFields.Any())
+                                    {
+                                        <div class="mt-2 pt-2 border-top">
+                                            <small class="text-muted">Custom Fields</small>
+                                            @foreach (var field in s.CustomFields)
+                                            {
+                                                <p class="mb-1 fs-12">
+                                                    <strong>@field.FieldName:</strong> @field.Value
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">
+                            @(isTypeB ? "No records on this project yet." : "No supporters yet for this project.")
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* One pager for both layouts. The phone used to get a "Load More" button
+       that was wired to nothing, so a project with more than ten rows had no
+       way to reach the eleventh. *@
+    <div class="px-3 pb-4">
+        @await Html.PartialAsync("_Pager", Model.Model)
+    </div>
+</div>

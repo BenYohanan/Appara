@@ -1,0 +1,227 @@
+﻿@{
+    var randomStr = DateTime.Now.ToString().ToLower().Replace(":", "").Replace("pm", "").Replace("am", "");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>@ViewData["Title"] | Apparcus - Organized Group Ledger</title>
+
+    <meta name="description" content="Apparcus - The secure way to contribute. Eliminate manual errors and give your Financial Secretary perfect records with instant, real-time verification.">
+    <meta name="keywords" content="The secure way to contribute. Eliminate manual errors and give your Financial Secretary perfect records with instant, real-time verification.">
+
+    <link href="~/leadpage/assets/img/Apparcus logo.jpg" rel="icon">
+    <link href="~/leadpage/assets/img/Apparcus logo.jpg" rel="apple-touch-icon">
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="~/leadpage/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/leadpage/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/leadpage/assets/vendor/aos/aos.css" rel="stylesheet" />
+    <link href="~/leadpage/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
+    <link href="~/leadpage/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
+    <link href="~/leadpage/assets/css/main.css" rel="stylesheet" />
+    <link href="~/css/sweetalert2.css" rel="stylesheet" />
+
+    <script>
+        function errorAlert(message) {
+            Swal.fire({
+                icon: 'error',
+                text: message,
+                timer: 60000,
+                confirmButtonColor: "#9333ea",
+            })
+        }
+
+        function infoAlert(message) {
+            Swal.fire({
+                icon: 'info',
+                text: message,
+                timer: 30000,
+                confirmButtonColor: "#9333ea",
+            })
+        }
+
+        function infoAlertWithStyles(message) {
+            Swal.fire({
+                title: 'Incomplete Payment',
+                icon: 'info',
+                text: message,
+                confirmButtonColor: "#9333ea",
+            })
+        }
+        function newInfoAlert(message, url) {
+            Swal.fire({
+                icon: 'info',
+                text: message,
+                timer: 30000,
+                confirmButtonColor: "#9333ea",
+            }).then((isConfirm) => {
+                if (isConfirm) {
+                    location.href = url;
+                }
+            })
+        }
+        function successAlert(message) {
+            Swal.fire({
+                icon: 'success',
+                text: message,
+                timer: 30000,
+                confirmButtonColor: "#9333ea",
+            })
+        }
+
+        function newErrorAlert(message, url) {
+            Swal.fire({
+                icon: 'error',
+                text: message,
+                timer: 30000,
+                confirmButtonColor: "#9333ea",
+            }).then(function () {
+                location.href = url;
+            })
+        }
+
+        function newSuccessAlert(message, url) {
+            Swal.fire({
+                icon: 'success',
+                text: message,
+                confirmButtonColor: "#9333ea",
+            }).then((isConfirm) => {
+                if (isConfirm) {
+                    location.reload(url);
+                }
+            })
+
+        }
+        function successAlertWithRedirect(message, url) {
+            Swal.fire({
+                title: "Success",
+                text: message,
+                icon: "success",
+                timer: 30000,
+                overlay: "background - color: rgba(43, 165, 137, 0.45)",
+                confirmButtonColor: "#9333ea",
+            }).then(function () {
+
+                location.href = url;
+            })
+        }
+
+        function successAlertWithFunction(message, action) {
+            Swal.fire({
+                title: "Success",
+                text: message,
+                icon: "success",
+                timer: 30000,
+                overlay: "background - color: rgba(43, 165, 137, 0.45)",
+                confirmButtonColor: "#9333ea",
+            }).then(function () {
+                action;
+            })
+        }
+    </script>
+</head>
+<body class="index-page">
+    <header id="header" class="header fixed-top">
+        <div class="container-fluid container-xl position-relative">
+            <div class="top-row d-flex align-items-center justify-content-between">
+                <a href="/Home/Index" class="logo d-flex align-items-center">
+                    <img src="~/leadpage/assets/img/Apparcus logo.jpg" alt="">
+                </a>
+
+                <div class="d-flex align-items-center">
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61585187761705" class="facebook" target="_blank"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/Apparcus1" class="twitter" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-wrap">
+            <div class="container d-flex justify-content-center position-relative">
+                <nav id="navmenu" class="navmenu d-flex align-items-center">
+                    <ul>
+                        <li><a href="~/Home/Index" class="active">Home</a></li>
+                        <li><a href="~/Home/About">About</a></li>
+                        <li><a href="~/Home/Services">Services</a></li>
+                        <li><a href="/Home/Pricing">Pricing</a></li>
+                        <li><a href="/Home/Privacy">Policy</a></li>
+                        <li><a href="~/Account/Login">Login</a></li>
+                    </ul>
+                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main" style="margin-top:90px">
+        @RenderBody()
+    </main>
+   
+    <footer id="footer" class="footer dark-background">
+        <div class="container">
+            <div class="row gy-5">
+                <div class="col-lg-4">
+                    <div class="footer-content">
+                        <a href="~/Home/Index" class="logo d-flex align-items-center mb-3">
+                            <span class="sitename">Apparcus</span>
+                        </a>
+                        <p class="mb-4">
+                            Apparcus helps users to keep accurate records of joint contributions.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6">
+                    <div class="footer-links">
+                        <h5>Company</h5>
+                        <ul>
+                            <li><a href="/Home/About"><i class="bi bi-chevron-right"></i> About Us</a></li>
+                            <li><a href="/Home/Services"><i class="bi bi-chevron-right"></i> Services</a></li>
+                            <li><a href="/Home/Pricing"><i class="bi bi-chevron-right"></i> Pricing</a></li>
+                            <li><a href="/Home/Privacy"><i class="bi bi-chevron-right"></i> Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+               
+                <div class="col-lg-4">
+                    <div class="footer-contact">
+                        <h5>Get in Touch</h5>
+                        <p><i class="bi bi-geo-alt"></i> 42 Allen Avenue, Lagos, Nigeria</p>
+                        <p><i class="bi bi-envelope"></i> <a href="mailto:support@apparcus.com">support@apparcus.com</a></p>
+                        <p>
+                            <i class="bi bi-telephone"></i>
+                            <a href="tel:09030372227">0903 037 2227</a>,
+                            <a href="tel:+2348115379302">+234 811 537 9302</a>
+                        </p>
+                        <div class="social-links mt-3">
+                            <a href="https://www.facebook.com/profile.php?id=61585187761705" class="facebook" target="_blank"><i class="bi bi-facebook"></i></a>
+                            <a href="https://x.com/Apparcus1" class="twitter" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </footer>
+
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+        <i class="bi bi-arrow-up-short"></i>
+    </a>
+
+    <script src="~/template/assets/js/jquery-3.7.1.min.js"></script>
+    <script src="~/js/signalr.min.js"></script>
+    <script src="~/leadpage/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/leadpage/assets/vendor/aos/aos.js"></script>
+    <script src="~/leadpage/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="~/leadpage/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@srexi/purecounterjs@1.5.0/dist/purecounter_vanilla.js"></script>
+    <script src="~/template/assets/plugins/select2/js/select2.min.js"></script>
+    <script src="~/leadpage/assets/js/main.js"></script>
+    <script src="~/js/sweetalert2.all.min.js"></script>
+    <script src="~/js/main.js?v=@randomStr"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

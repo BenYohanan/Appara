@@ -1,0 +1,85 @@
+@model Apparcus.Models.ProjectOptionsViewModel
+@{
+    var p = Model.Prefix;
+}
+
+@* Order follows the spec: extra fields first, then audit, then going public. *@
+<hr />
+<h6>Add Another Field</h6>
+<p class="help-text">Optional extra questions to ask each contributor beyond name, phone number, and amount &mdash; for example "T-shirt Size" or "Gender". They also let you tell two contributors with the same name apart. Use "+ Add Field" to add as many as you need; each one can be marked required or optional.</p>
+
+<div id="@Model.CustomFieldsContainerId"></div>
+
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="@(Model.AddCustomFieldFunction)()">
+    + Add Field
+</button>
+
+@* Filled from the field rows above by refreshPaymentListOptions() in main.js. *@
+<div class="mb-3 mt-3">
+    <label class="form-label" for="@(p)paymentListField">Show on Payment List</label>
+    <p class="help-text">The payment list on the project link shows each contributor's name and one more detail. Pick one of your extra fields to show instead of the amount.</p>
+    <select class="form-control payment-list-field" id="@(p)paymentListField"
+            data-fields-container="@Model.CustomFieldsContainerId">
+        <option value="">Amount paid</option>
+    </select>
+</div>
+
+@if (Model.ShowAuditToggle)
+{
+    <div class="mb-3 mt-4">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="@(p)showForAudit">
+            <label class="form-check-label" for="@(p)showForAudit">Show for Audit</label>
+        </div>
+        <p class="help-text mb-0">Adds withdrawal history for contributors to see. It puts a "Withdrawal History" tab on the project page showing who money was sent to, how much, and when.</p>
+    </div>
+}
+
+<div class="mb-3 mt-3">
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="@(p)isPublic">
+        <label class="form-check-label" for="@(p)isPublic">Make Project Name Public</label>
+    </div>
+    <p class="help-text mb-0">Allow your contributors to easily search this project on our website. The Code will be required.</p>
+
+    @* Only meaningful once the project is public, so it travels with the toggle. *@
+    <div class="mt-3 ps-1 d-none" id="@(p)accessCodeSection">
+        <div class="d-flex align-items-start flex-wrap gap-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="@(p)setCodeBtn"
+                    onclick="toggleAccessCodeEditor('@p')">
+                Set Code
+            </button>
+            <p class="help-text mb-0 flex-fill" style="min-width: 220px;">
+                This option enables contributors to search this project on our website.
+                They will need to enter the Code before making payment.
+            </p>
+        </div>
+
+        @if (Model.IsEdit)
+        {
+            <p class="help-text mb-0 mt-2" id="@(p)accessCodeState"></p>
+        }
+
+        <div class="mt-2 d-none" id="@(p)accessCodeEditor">
+            <label class="form-label mb-1" for="@(p)accessCode">4-digit Code</label>
+            <input type="text" class="form-control" id="@(p)accessCode"
+                   inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off"
+                   placeholder="e.g. 4821">
+            <p class="help-text mb-0 mt-1">
+                Contributors enter this before the project page opens. Share it with your group the
+                same way you announce the project. It is saved when you
+                @(Model.IsEdit ? "click Update" : "click Save").
+            </p>
+            @if (Model.IsEdit)
+            {
+                <button type="button" class="btn btn-sm btn-link text-danger px-0 mt-1"
+                        id="@(p)removeCodeBtn" onclick="clearAccessCode('@p')">
+                    Remove the code
+                </button>
+            }
+        </div>
+
+        @* "", "set" or "clear" — read by saveProject()/editProject() on submit. *@
+        <input type="hidden" id="@(p)accessCodeAction" value="">
+    </div>
+</div>

@@ -1,0 +1,114 @@
+﻿@using Core.ViewModels
+@model Core.ViewModels.IPageListModel<WithdrawalViewModel>
+@{
+    Layout = ViewBag.Layout;
+    ViewData["Title"] = "Withdrawals";
+}
+<style>
+
+    body {
+        counter-reset: Serial; /* / Set the Serial counter to 0 /*/
+    }
+
+    tr td:first-child:before {
+        counter-increment: Serial; /* / Increment the Serial counter /*/
+        content: counter(Serial); /*  / Display the counter /*/
+    }
+</style>
+<div class="page-wrapper">
+    <div class="content">
+        <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+            <div class="my-auto mb-2">
+                <h2 class="mb-1">Withdrawals</h2>
+                <nav>
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0);"><i class="ti ti-smart-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            Dashboard
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Withdrawal</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        @await Html.PartialAsync("_PageSearcher", Model)
+        <div class="d-none d-md-block">
+            <div class="card-box">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>Sent To</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Model != null)
+                                {
+                                    @foreach (var withdrawal in Model.Model)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td>Send to: @withdrawal.SentTo with account number @withdrawal.AccountWithdrawnTo</td>
+                                            <td>₦@withdrawal.Amount.ToString("N0")</td>
+                                            <td>@withdrawal.Status</td>
+                                            <td>@withdrawal.CreatedAt.ToString("dd-MM-yyyy")</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-block d-md-none">
+            <div class="row">
+                @if (Model.Model != null)
+                {
+                    @foreach (var withdrawal in Model.Model)
+                    {
+                        <div class="col-xxl-3 col-lg-4 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <h6><a href="project-details.html">@withdrawal.ProjectName</a></h6>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom">
+                                        <div class="d-flex align-items-center file-name-icon">
+                                            <a href="javascript:void(0);" class="avatar avatar-sm avatar-rounded flex-shrink-0">
+                                                <img src="~/template/assets/img/users/user-39.jpg" class="img-fluid" alt="img">
+                                            </a>
+                                            <div class="ms-2">
+                                                <h6 class="fw-normal fs-12"><a href="javascript:void(0);">₦@withdrawal.Amount.ToString("N0")</a></h6>
+                                                <span class="fs-12 fw-normal">Send to: @withdrawal.SentTo with account number @withdrawal.AccountWithdrawnTo</span><br />
+                                                <span class="fs-12 fw-normal">Account Number: @withdrawal.AccountWithdrawnTo</span><br />
+                                                <span class="fs-12 fw-normal">Status: @withdrawal.Status</span><br />
+                                                <span class="fs-12 fw-normal">Date: @withdrawal.CreatedAt.ToString("dd-MM-yyyy")</span><br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="col-md-12">
+                    <div class="text-center mb-4">
+                        <a href="#" class="btn btn-primary"><i class="ti ti-loader-3 me-1"></i>Load More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Html.PartialAsync("_Pager", Model?.Model)
+</div>
+                                           
+
+

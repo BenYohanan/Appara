@@ -1,0 +1,420 @@
+﻿@using Core.DbContext
+@using Logic
+@{
+    var randomStr = DateTime.Now.ToString().ToLower().Replace(":", "").Replace("pm", "").Replace("am", "");
+    var user = Utility.GetCurrentUser();
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] | Apparcus - Organized Group Ledger</title>
+
+    <meta name="description" content="Apparcus - The secure way to contribute. Eliminate manual errors and give your Financial Secretary perfect records with instant, real-time verification.">
+    <meta name="keywords" content="The secure way to contribute. Eliminate manual errors and give your Financial Secretary perfect records with instant, real-time verification.">
+    <meta name="author" content="Ben Yohanan">
+    <meta name="robots" content="index, follow">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="~/template/assets/img/apple-touch-icon.png">
+
+    <!-- Favicon -->
+    <link href="~/leadpage/assets/img/Apparcus logo.jpg" rel="icon">
+    <link href="~/leadpage/assets/img/Apparcus logo.jpg" rel="apple-touch-icon">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/template/assets/css/bootstrap.min.css">
+
+    <!-- Feather CSS -->
+    <link rel="stylesheet" href="~/template/assets/plugins/icons/feather/feather.css">
+
+    <!-- Tabler Icon CSS -->
+    <link rel="stylesheet" href="~/template/assets/plugins/tabler-icons/tabler-icons.css">
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="~/template/assets/plugins/select2/css/select2.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="~/template/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="~/template/assets/plugins/fontawesome/css/all.min.css">
+
+    <!-- Datetimepicker CSS -->
+    <link rel="stylesheet" href="~/template/assets/css/bootstrap-datetimepicker.min.css">
+
+    <!-- Datatable CSS -->
+    <link rel="stylesheet" href="~/template/assets/css/dataTables.bootstrap5.min.css">
+
+    <!-- Bootstrap Tagsinput CSS -->
+    <link rel="stylesheet" href="~/template/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css">
+
+    <!-- Summernote CSS -->
+    <link rel="stylesheet" href="~/template/assets/plugins/summernote/summernote-lite.min.css">
+
+    <!-- Daterangepikcer CSS -->
+    <link rel="stylesheet" href="~/template/assets/plugins/daterangepicker/daterangepicker.css">
+
+    <!-- Color Picker Css -->
+    <link rel="stylesheet" href="~/template/assets/plugins/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="~/template/assets/plugins/@@simonwep/pickr/themes/nano.min.css">
+    <link href="~/css/sweetalert2.css" rel="stylesheet" />
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="~/template/assets/css/style.css">
+    <link href="~/css/pagination.css" rel="stylesheet" />
+
+	<script>
+		function errorAlert(message) {
+			Swal.fire({
+				icon: 'error',
+				text: message,
+				timer: 60000,
+				confirmButtonColor: "#9333ea",
+			})
+		}
+
+        function infoAlert(message) {
+            Swal.fire({
+                icon: 'info',
+                text: message,
+                timer: 30000,
+                confirmButtonColor: "#9333ea",
+            })
+        }
+
+        function infoAlertWithStyles(message) {
+            Swal.fire({
+                title: 'Incomplete Payment',
+                icon: 'info',
+                text: message,
+                confirmButtonColor: "#9333ea",
+            })
+        }
+        function newInfoAlert(message, url) {
+            Swal.fire({
+                icon: 'info',
+                text: message,
+                timer: 30000,
+                confirmButtonColor: "#9333ea",
+            }).then((isConfirm) => {
+                if (isConfirm) {
+                    location.href = url;
+                }
+            })
+        }
+        function successAlert(message) {
+            Swal.fire({
+                icon: 'success',
+                text: message,
+                timer: 30000,
+                confirmButtonColor: "#9333ea",
+            })
+        }
+
+        function newErrorAlert(message, url) {
+            Swal.fire({
+                icon: 'error',
+                text: message,
+                timer: 30000,
+                confirmButtonColor: "#9333ea",
+            }).then(function () {
+                location.href = url;
+            })
+        }
+
+        function newSuccessAlert(message, url) {
+            Swal.fire({
+                icon: 'success',
+                text: message,
+                confirmButtonColor: "#9333ea",
+            }).then((isConfirm) => {
+                if (isConfirm) {
+                    location.reload(url);
+                }
+            })
+
+        }
+        function successAlertWithRedirect(message, url) {
+            Swal.fire({
+                title: "Success",
+                text: message,
+                icon: "success",
+                timer: 30000,
+                overlay: "background - color: rgba(43, 165, 137, 0.45)",
+                confirmButtonColor: "#9333ea",
+            }).then(function () {
+
+                location.href = url;
+            })
+        }
+    </script>
+</head>
+
+<body>
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+
+		<!-- Header -->
+		<div class="header">
+			<div class="main-header">
+                <div class="header-left">
+                    <a href="/Home/Index" class="logo">
+                        <img src="~/leadpage/assets/img/Apparcus logo.jpg" style="width:30px;" alt="Logo">
+                    </a>
+                </div>
+
+                <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+                    <span class="bar-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </a>
+
+                <div class="header-user">
+                    <div class="nav user-menu nav-list">
+
+                        <div class="me-auto d-flex align-items-center" id="header-search">
+                            <a id="toggle_btn" href="javascript:void(0);" class="btn btn-menubar me-1">
+                                <i class="ti ti-arrow-bar-to-left"></i>
+                            </a>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="me-1">
+                                <a href="#" class="btn btn-menubar btnFullscreen">
+                                    <i class="ti ti-maximize"></i>
+                                </a>
+                            </div>
+
+                            <div class="dropdown profile-dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                                    <span class="avatar avatar-sm online position-relative">
+                                        @if (!string.IsNullOrEmpty(user?.ProfilePictureUrl))
+                                        {
+                                            <img id="headerAvatar"
+                                                 src="@user.ProfilePictureUrl?t=@DateTime.Now.Ticks"
+                                                 alt="Profile"
+                                                 class="img-fluid rounded-circle">
+                                        }
+                                        else
+                                        {
+                                            <img id="headerAvatar"
+                                                 src="/template/assets/img/profiles/avatar-12.jpg"
+                                                 alt="Profile"
+                                                 class="img-fluid rounded-circle">
+                                        }
+                                    </span>
+                                </a>
+
+                                <div class="dropdown-menu shadow-none">
+                                    <div class="card mb-0">
+                                        <div class="card-header">
+                                            <div class="d-flex align-items-center">
+                                                <span class="avatar avatar-lg me-2 avatar-rounded">
+                                                    @if (!string.IsNullOrEmpty(user?.ProfilePictureUrl))
+                                                    {
+                                                        <img id="dropdownBigAvatar"
+                                                             src="@user?.ProfilePictureUrl?t=@DateTime.Now.Ticks"
+                                                             alt="Profile"
+                                                             class="img-fluid rounded-circle">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img id="dropdownBigAvatar"
+                                                             src="/template/assets/img/profiles/avatar-12.jpg"
+                                                             alt="Profile"
+                                                             class="img-fluid rounded-circle">
+                                                    }
+                                                </span>
+                                                <div>
+                                                    <h5 class="mb-0">@(user?.FullName ?? "User")</h5>
+                                                    <p class="fs-12 fw-medium mb-0 text-muted">@(user?.Email ?? "")</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <a class="dropdown-item d-inline-flex align-items-center p-0 py-2" asp-action="Profile" asp-controller="User">
+                                                My Profile
+                                            </a>
+                                        </div>
+                                        <div class="card-footer">
+                                            <form asp-controller="Account" asp-action="LogOut" method="post">
+                                                <button type="submit" class="dropdown-item text-danger border-0 bg-transparent p-0 text-start w-100 d-inline-flex align-items-center py-2">
+                                                    Logout
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+				</div>
+				<!-- Mobile Menu -->
+				<div class="dropdown mobile-user-menu">
+					<a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" asp-action="Profile" asp-controller="User">My Profile</a>
+
+                        <form asp-controller="Account" asp-action="LogOut" method="post" class="m-0">
+                            <button type="submit" class="dropdown-item text-danger"> Logout </button>
+                        </form>
+                    </div>
+				</div>
+				<!-- /Mobile Menu -->
+			</div>
+		</div>
+		<div class="container-fluid">
+			<main role="main" class="pb-3">
+				@RenderBody()
+			</main>
+		</div>
+		<!-- /Header -->
+
+		<!-- Sidebar -->
+		<div class="sidebar" id="sidebar">
+            <!-- Logo -->
+            <div class="sidebar-logo">
+                <a href="/Home/Index" class="logo logo-normal">
+                    <img src="~/leadpage/assets/img/Apparcus logo.jpg" width="40" alt="Logo">
+                </a>
+            </div>
+            <!-- /Logo -->
+			<div class="sidebar-inner slimscroll">
+				<div id="sidebar-menu" class="sidebar-menu">
+					<ul>
+						<li class="menu-title"><span>MAIN MENU</span></li>
+						<li>
+							<ul>
+                                @if (user?.UserRole == Constants.AdminRole)
+                                {
+                                    <li>
+                                        <a href="/Admin/Index" class="active">
+                                            <i class="ti ti-smart-home"></i>
+                                            <span>Dashboard</span>
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="/User/Index" class="active">
+                                            <i class="ti ti-smart-home"></i>
+                                            <span>Dashboard</span>
+                                        </a>
+                                    </li>
+                                }
+							</ul>
+						</li>
+						<li class="menu-title"><span>PROJECTS</span></li>
+						<li>
+							<ul>
+                                @if (user?.UserRole == Constants.AdminRole)
+                                {
+                                    <li>
+                                        <a href="/Admin/Users">
+                                            <i class="ti ti-users-group"></i><span>Users</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="/Project/DisabledProjects">
+                                            <i class="ti ti-box"></i><span>Disabled Projects</span>
+                                        </a>
+                                    </li>
+                                } else {
+
+                                     <li>
+                                        <a href="/User/BeadsHistory">
+                                            <i class="ti ti-history"></i><span>Beads History</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/User/PersonalAccount">
+                                            <i class="ti ti-wallet"></i><span>Personal Account</span>
+                                        </a>
+                                    </li>
+                                }
+                                   
+                                <li>
+                                    <a href="/Project/Index">
+                                        <i class="ti ti-box"></i><span>Projects</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/Project/TypeB">
+                                        <i class="ti ti-list-details"></i><span>Type-B Records</span>
+                                    </a>
+                                </li>
+                                
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- /Sidebar -->
+	</div>
+	<!-- /Main Wrapper -->
+	<!-- jQuery -->
+	<script src="~/template/assets/js/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="~/template/assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Feather Icon JS -->
+    <script src="~/template/assets/js/feather.min.js"></script>
+
+    <!-- Slimscroll JS -->
+    <script src="~/template/assets/js/jquery.slimscroll.min.js"></script>
+
+
+    <!-- Datatable JS -->
+    <script src="~/template/assets/js/jquery.dataTables.min.js"></script>
+    <script src="~/template/assets/js/dataTables.bootstrap5.min.js"></script>
+
+
+    <!-- Chart JS -->
+    <script src="~/template/assets/plugins/apexchart/apexcharts.min.js"></script>
+    <script src="~/template/assets/plugins/apexchart/chart-data.js"></script>
+
+    <!-- Chart JS -->
+    <script src="~/template/assets/plugins/chartjs/chart.min.js"></script>
+    <script src="~/template/assets/plugins/chartjs/chart-data.js"></script>
+
+    <!-- Datetimepicker JS -->
+    <script src="~/template/assets/js/moment.js"></script>
+    <script src="~/template/assets/js/bootstrap-datetimepicker.min.js"></script>
+
+    <!-- Daterangepikcer JS -->
+    <script src="~/template/assets/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <!-- Summernote JS -->
+    <script src="~/template/assets/plugins/summernote/summernote-lite.min.js"></script>
+
+    <!-- Bootstrap Tagsinput JS -->
+    <script src="~/template/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="~/template/assets/plugins/select2/js/select2.min.js"></script>
+
+    <!-- Color Picker JS -->
+    <script src="~/template/assets/plugins/@@simonwep/pickr/pickr.es5.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="~/template/assets/js/todo.js"></script>
+    <script src="~/template/assets/js/theme-colorpicker.js"></script>
+    <script src="~/template/assets/js/script.js"></script>
+    <script src="~/js/signalr.min.js"></script>
+    <script src="~/js/sweetalert2.all.min.js"></script>
+    <script src="~/js/main.js?v=@randomStr"></script>
+   
+    @RenderSection("Scripts", required: false)
+</body>
+
+</html>

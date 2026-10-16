@@ -1,0 +1,169 @@
+﻿@using Core.ViewModels
+@model Core.ViewModels.IPageListModel<PersonalTransactionViewModel>
+@{
+    ViewData["Title"] = "Personal Account";
+    Layout = ViewBag.Layout;
+}
+
+<style>
+    body {
+        counter-reset: Serial;
+    }
+
+    tr td:first-child:before {
+        counter-increment: Serial;
+        content: counter(Serial);
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+            <div class="my-auto mb-2">
+                <h2 class="mb-1">Personal Account</h2>
+                <nav>
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0);"><i class="ti ti-smart-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Personal Account</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+                <div class="me-2 mb-2">
+                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#moveBeadsModal" class="btn btn-outline-warning">
+                        <i class="ti ti-award me-2"></i>Move Beads
+                    </a>
+                </div>
+                <div class="mb-2">
+                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#buyBeadsModal" class="btn btn-outline-success">
+                        <i class="ti ti-wallet me-2"></i>Buy Beads
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-success d-flex align-items-center justify-content-between mb-4 flex-wrap">
+            <div class="d-flex flex-column">
+                <div>
+                    <strong>Personal Balance:</strong>
+                    <span class="fs-3 fw-bold">₦@ViewBag.PersonalBalance</span>
+                </div>
+                <div>
+                    <strong>Beads Balance:</strong>
+                    <span class="fs-3 fw-bold text-warning">@ViewBag.BeadsBalance <small class="fw-normal">(₦@ViewBag.BeadsBalance)</small></span>
+                </div>
+            </div>
+            <div class="ms-auto">
+                <span class="badge bg-secondary fs-6">Account: @ViewBag.PersonalAccountNumber</span>
+            </div>
+        </div>
+
+        @await Html.PartialAsync("_PageSearcher", Model)
+
+        <div class="card-box d-none d-md-block">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Type</th>
+                            <th>Direction</th>
+                            <th>Amount</th>
+                            <th>Balance After</th>
+                            <th>Narration</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Model?.Any() == true)
+                        {
+                            foreach (var t in Model.Model)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@t.Type</td>
+                                    <td>
+                                        @if (t.Direction == "Money-In")
+                                        {
+                                            <span class="badge bg-success">Money-In</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Money-Out</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (t.Direction == "Money-In")
+                                        {
+                                            <span class="text-success">+₦@t.Amount.ToString("N2")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">-₦@t.Amount.ToString("N2")</span>
+                                        }
+                                    </td>
+                                    <td>₦@t.BalanceAfter.ToString("N2")</td>
+                                    <td class="text-muted small">@t.Narration</td>
+                                    <td>@t.DateCreated.ToString("dd MMM yyyy, h:mm tt")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="d-block d-md-none">
+            <div class="row">
+                @if (Model.Model?.Any() == true)
+                {
+                    foreach (var t in Model.Model)
+                    {
+                        <div class="col-12 mb-3">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <h6 class="mb-0">@t.Type</h6>
+                                            <small class="text-muted">@t.DateCreated.ToString("dd MMM yyyy, h:mm tt")</small>
+                                        </div>
+                                        @if (t.Direction == "Money-In")
+                                        {
+                                            <span class="badge bg-success fs-6">+₦@t.Amount.ToString("N2")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger fs-6">-₦@t.Amount.ToString("N2")</span>
+                                        }
+                                    </div>
+
+                                    <hr>
+
+                                    <small class="text-muted d-block mb-1">
+                                        <strong>Balance after:</strong> ₦@t.BalanceAfter.ToString("N2")
+                                    </small>
+                                    @if (!string.IsNullOrEmpty(t.Narration))
+                                    {
+                                        <small class="text-muted d-block">
+                                            @t.Narration
+                                        </small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="mt-4">
+            @await Html.PartialAsync("_Pager", Model.Model)
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_MoveBeadsModal")
+@await Html.PartialAsync("_BuyBeadsModal")

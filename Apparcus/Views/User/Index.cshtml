@@ -1,0 +1,215 @@
+﻿@model Core.ViewModels.UserDashboardDto
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = ViewBag.Layout;
+    var kycVerified = Model.KYCVerified;
+}
+
+<div class="page-wrapper">
+    <div class="content">
+        <!-- Breadcrumb -->
+        <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+            <div class="my-auto mb-2">
+                <h2 class="mb-1">Dashboard</h2>
+                <nav>
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0);"><i class="ti ti-smart-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            Welcome back @Model.FullName
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- /Breadcrumb -->
+        @if (!kycVerified)
+        {
+            <div class="card border-primary mb-4 shadow-sm">
+                <div class="card-body d-flex align-items-center justify-content-between">
+
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <span class="avatar avatar-md bg-primary text-white rounded-circle">
+                                <i class="ti ti-shield-check fs-20"></i>
+                            </span>
+                        </div>
+
+                        <div>
+                            <h6 class="mb-1 text-dark">KYC Verification Required</h6>
+                            <p class="mb-0 text-muted">
+                                Please verify your identity to unlock all platform features.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <a href="javascript:void(0)"
+                           data-bs-toggle="modal"
+                           data-bs-target="#kycModal"
+                           class="btn btn-primary btn-sm">
+                            Verify
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        }
+        <div class="alert bg-secondary-transparent alert-dismissible fade show mb-4">
+            You have @Model.ProjectCount project running currently!!!
+            <button type="button" class="btn-close fs-14" data-bs-dismiss="alert" aria-label="Close"><i class="ti ti-x"></i></button>
+        </div>
+        <div class="row">
+            <div class="col-xl-4 col-md-6">
+                <div class="card position-relative">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar avatar-md br-10 icon-rotate bg-primary flex-shrink-0">
+                                <span class="d-flex align-items-center"><i class="ti ti-delta text-white fs-16"></i></span>
+                            </div>
+                            <div class="ms-3">
+                                <p class="fw-medium text-truncate mb-1">Total No of Project</p>
+                                <h5>@Model.ProjectCount</h5>
+                            </div>
+                        </div>
+                        <span class="position-absolute top-0 end-0"><img src="~/template/assets/img/bg/card-bg-04.png" alt="Img"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+                <div class="card position-relative">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar avatar-md br-10 icon-rotate bg-secondary flex-shrink-0">
+                                <span class="d-flex align-items-center"><i class="ti ti-users-group text-white fs-16"></i></span>
+                            </div>
+                            <div class="ms-3">
+                                <p class="fw-medium text-truncate mb-1">No of Contributors</p>
+                                <h5>@Model.ContibutorsCount</h5>
+                            </div>
+                        </div>
+                        <span class="position-absolute top-0 end-0"><img src="~/template/assets/img/bg/card-bg-04.png" alt="Img"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+                <div class="card position-relative">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar avatar-md br-10 icon-rotate bg-purple flex-shrink-0">
+                                <span class="d-flex align-items-center"><i class="ti ti-currency text-white fs-16"></i></span>
+                            </div>
+                            <div class="ms-3">
+                                <p class="fw-medium text-truncate mb-1">Wallet</p>
+                                <h5>₦@Model.WalletBalance</h5>
+                            </div>
+                        </div>
+                        <span class="position-absolute top-0 end-0"><img src="~/template/assets/img/bg/card-bg-04.png" alt="Img"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-md-6">
+                <div class="card position-relative">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-md br-10 icon-rotate bg-warning flex-shrink-0">
+                                    <span class="d-flex align-items-center"><i class="ti ti-award text-white fs-16"></i></span>
+                                </div>
+                                <div class="ms-3">
+                                    <p class="fw-medium text-truncate mb-1">Beads Balance</p>
+                                    <h5>@((Model.BeadsBalance ?? 0).ToString("N0")) <small class="text-muted fw-normal">(₦@((Model.BeadsBalance ?? 0).ToString("N0")))</small></h5>
+                                </div>
+                            </div>
+                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#moveBeadsModal" class="btn btn-outline-warning btn-sm">
+                                Move to Naira
+                            </a>
+                        </div>
+                        <span class="position-absolute top-0 end-0"><img src="~/template/assets/img/bg/card-bg-04.png" alt="Img"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-md-6">
+                <div class="card position-relative">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-md br-10 icon-rotate bg-success flex-shrink-0">
+                                    <span class="d-flex align-items-center"><i class="ti ti-wallet text-white fs-16"></i></span>
+                                </div>
+                                <div class="ms-3">
+                                    <p class="fw-medium text-truncate mb-1">Personal Balance</p>
+                                    <h5>₦@((Model.PersonalBalance ?? 0).ToString("N2"))</h5>
+                                </div>
+                            </div>
+                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#buyBeadsModal" class="btn btn-outline-success btn-sm">
+                                Buy Beads
+                            </a>
+                        </div>
+                        <span class="position-absolute top-0 end-0"><img src="~/template/assets/img/bg/card-bg-04.png" alt="Img"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h6 class="mb-0">Your Personal Account</h6>
+                            @if (!string.IsNullOrEmpty(Model.PersonalAccountNumber))
+                            {
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#personalWithdrawModal">
+                                    <i class="ti ti-arrow-up-right me-1"></i>Withdraw
+                                </button>
+                            }
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between p-3 border rounded border-success">
+                            <div>
+                                <p class="text-success small mb-1">
+                                    <i class="ti ti-circle-check me-1"></i>Receive money here
+                                </p>
+                                @if (!string.IsNullOrEmpty(Model.PersonalAccountNumber))
+                                {
+                                    <h6 class="mb-0" id="personalAccountNumberText">@Model.PersonalAccountNumber</h6>
+                                    <p class="mb-1 small text-muted" id="personalAccountNameText">@Model.PersonalAccountName</p>
+                                    <p class="mb-0 small text-muted">Safe Haven Microfinance Bank</p>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">Not set up yet — complete KYC to activate.</span>
+                                }
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.PersonalAccountNumber))
+                            {
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="copyAccountNumber('personalAccountNumberText')" title="Copy account number">
+                                    <i class="ti ti-copy"></i>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var currentBeadsBalance = @((Model.BeadsBalance ?? 0).ToString("F0"));
+    var currentPersonalBalance = @((Model.PersonalBalance ?? 0).ToString("F2"));
+
+    function copyAccountNumber(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text).then(function () {
+            successAlert("Account number copied!");
+        });
+    }
+</script>
+
+@await Html.PartialAsync("_KycModal")
+@await Html.PartialAsync("_MoveBeadsModal")
+@await Html.PartialAsync("_BuyBeadsModal")
+@await Html.PartialAsync("_PersonalWithdrawModal")

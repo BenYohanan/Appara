@@ -1,0 +1,119 @@
+﻿@using Core.Constants
+@{
+    ViewData["Title"] = "Pricing";
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+
+    var bands = TransactionChargeConstants.Bands;
+    var packs = RecordQuotaConstants.Packs;
+}
+<div class="container-fluid">
+    <div class="card-box">
+        <div class="col-md-12" style="padding:60px;">
+            <h2>What Apparcus Costs</h2>
+            <p class="text-muted">Every figure below is in naira. Last updated: September 8, 2026.</p>
+
+            <p>
+                We publish our charges in full. Nothing on this page is hidden inside a total,
+                and nothing is added at the point of payment that is not listed here.
+            </p>
+
+            <h3>Transaction Charge</h3>
+            <p>
+                A contributor pays the amount they are contributing plus the charge for the band
+                that amount falls in. The project owner receives the full contribution &mdash; the
+                charge is never taken out of it. Of the charge, our banking partner Safe Haven MFB
+                takes its share and Apparcus keeps the rest.
+            </p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead>
+                        <tr>
+                            <th>Amount</th>
+                            <th>Charge</th>
+                            <th>MFB gets</th>
+                            <th>We get</th>
+                            <th>Beads reward</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var band in bands)
+                        {
+                            <tr>
+                                <td>@band.AmountLabel</td>
+                                <td>@band.ChargeLabel</td>
+                                <td>
+                                    @(band.BankPercentage > 0
+                                        ? $"{band.BankPercentage * 100:0.##}%"
+                                        : band.BankFlat.ToString("N0"))
+                                </td>
+                                <td>@band.ApparcusFlat.ToString("N0")</td>
+                                <td>@band.BeadsLabel</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="text-muted small">
+                A contribution is also given its own kobo &mdash; between 0.10 and 0.99 &mdash; so
+                that two people paying the same amount into the same project can still be told
+                apart when the money lands. That kobo is shown on the payment screen before you
+                transfer anything.
+            </p>
+
+            <h3>Beads</h3>
+            <p>
+                Beads are earned by the project owner on each successful contribution, at the rate
+                shown for that contribution's band. Contributions made within the first five days
+                of a project being created earn the higher rate where the band has one. One Bead is
+                worth ₦1 and Beads can be used to pay withdrawal charges or moved to your Personal
+                Account.
+            </p>
+
+            <h3>Withdrawals</h3>
+            <p>
+                Every project gets @WithdrawalFeeConstants.FreeWithdrawalsPerProject free withdrawals.
+                After that a withdrawal costs
+                ₦@WithdrawalFeeConstants.WithdrawalFeeBeads.ToString("N0") &mdash; ₦10.00 to Safe Haven
+                MFB, ₦0.075 VAT and ₦4.98875 to Apparcus &mdash; payable in Beads if you hold enough,
+                and otherwise taken from the project balance.
+            </p>
+
+            <h3>Type-B Record Sheets</h3>
+            <p>
+                Type-B projects keep records of payments that already happened rather than taking
+                money, so they are paid for by the record. A pack covers all of your Type-B projects
+                together, not one project each.
+            </p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead>
+                        <tr>
+                            <th>Records</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pack in packs)
+                        {
+                            <tr>
+                                <td>@pack.Size.ToString("N0")</td>
+                                <td>@pack.PriceNaira.ToString("N0")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Questions</h3>
+            <p>
+                Apparcus Finexus Ltd<br />
+                Website: <a href="https://www.apparcus.com">www.apparcus.com</a><br />
+                Email: <a href="mailto:support@apparcus.com">support@apparcus.com</a><br />
+                Phone: <a href="tel:09030372227">0903 037 2227</a>, <a href="tel:+2348115379302">+234 811 537 9302</a>
+            </p>
+        </div>
+    </div>
+</div>

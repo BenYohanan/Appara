@@ -1,0 +1,44 @@
+﻿<div class="modal fade" id="add_project" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                @* Filled when the modal opens: free, or what the project fee will be paid from. *@
+                <div class="alert alert-info d-none" id="accountFeeNote" role="status"></div>
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <p class="help-text">Name of the project you want your group to contribute on</p>
+                    <input type="text" class="form-control" id="name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <p class="help-text">Explain what the project is for, why it matters, and how the funds will be used. Contributors see this on the project's public page before they decide to give.</p>
+                    <textarea id="description" class="form-control summernote"></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label">Amount Needed</label>
+                    <p class="help-text">The total amount you're aiming to raise. This is shown as the target on the project page, and contribution progress is tracked against it.</p>
+                    <input type="number" class="form-control" id="amountNeeded">
+                </div>
+                @await Html.PartialAsync("_ProjectOptions", new Apparcus.Models.ProjectOptionsViewModel
+                {
+                    Prefix = "",
+                    CustomFieldsContainerId = "customFieldsContainer",
+                    AddCustomFieldFunction = "addCustomField",
+                    IsEdit = false
+                })
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex align-items-center justify-content-end">
+                    <button type="button" class="btn btn-outline-light border me-2" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveProject()" type="button" data-bs-toggle="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

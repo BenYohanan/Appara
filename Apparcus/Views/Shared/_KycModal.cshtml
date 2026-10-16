@@ -1,0 +1,94 @@
+﻿<div class="modal fade" id="kycModal" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Verify Your KYC</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body">
+				<div id="kycStep1">
+					<div class="mb-3">
+						<label class="form-label">KYC Type</label>
+						<select id="kycType" class="form-control select2">
+							<option value="">Select</option>
+							<option value="BVN">BVN</option>
+							<option value="NIN">NIN</option>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Enter Number</label>
+						<input type="text" id="kycNumber" class="form-control" placeholder="Enter BVN or NIN">
+						<input id="userId" value="@Model.UserId" hidden>
+						<input id="identityId" value="" hidden>
+					</div>
+					<button class="btn btn-primary w-100" onclick="confirmKycPhone()" id="sendOtpBtn" type="button">
+						Continue
+					</button>
+					<p class="help-text text-muted small mt-2 mb-0">
+						NIN/BVN verification is a CBN requirement for opening an account.
+					</p>
+				</div>
+
+
+				<!-- STEP 1b — is the phone behind this ID still reachable? -->
+				<div id="kycStepConfirm" style="display:none">
+					<p class="mb-2">
+						We&rsquo;ll send a one-time code to the phone number registered to your
+						<strong><span id="kycConfirmType">BVN</span></strong>.
+					</p>
+					<p class="text-muted small">Is that number still active and with you?</p>
+
+					<div class="d-grid gap-2 mt-3">
+						<button class="btn btn-primary" id="kycPhoneYes" type="button">
+							Yes, send the code
+						</button>
+						<button class="btn btn-outline-primary" id="kycPhoneSwitch" type="button">
+							Use <span id="kycSwitchTarget">NIN</span> instead
+						</button>
+						<button class="btn btn-link text-decoration-none" id="kycPhoneNo" type="button">
+							No, that number is not active
+						</button>
+					</div>
+
+					<div class="alert alert-warning mt-3 mb-0" id="kycPhoneInactiveNote" style="display:none">
+						<p class="mb-2">
+							Verifying with BVN or NIN is a CBN requirement, so we can&rsquo;t open your
+							account without it.
+						</p>
+						<p class="mb-0">
+							Your <strong><span id="kycSuggestType">NIN</span></strong> may be registered to a
+							different number that you still use. Try that instead &mdash; use the button above.
+						</p>
+					</div>
+
+					<div class="text-center mt-3">
+						<button class="btn btn-link btn-sm text-decoration-none" id="kycConfirmBack" type="button">
+							Back
+						</button>
+					</div>
+				</div>
+
+				<!-- STEP 2 -->
+				<div id="kycStep2" style="display:none">
+
+					<p class="text-success text-center" id="otpMessage"></p>
+
+					<div class="mb-3">
+						<label class="form-label">Enter OTP</label>
+						<input type="text" id="otpCode" class="form-control" maxlength="6">
+					</div>
+
+					<button class="btn btn-primary w-100" id="verifyOtpBtn" type="button">Verify OTP</button>
+
+					<div class="text-center mt-3">
+						<small id="resendTimer">Resend OTP in 30s</small>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>

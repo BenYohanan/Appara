@@ -1,0 +1,212 @@
+﻿@model Core.ViewModels.RecordQuotaStatus
+
+@* Create *@
+<div class="modal fade" id="add_type_b" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Type-B Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <p class="help-text">What this sheet of records is called, e.g. "August Building Fund".</p>
+                    <input type="text" class="form-control" id="tb_name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Date</label>
+                    <p class="help-text">The day these payments were made &mdash; not the day you type them up.</p>
+                    <input type="date" class="form-control" id="tb_customDate">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <p class="help-text">What the records are for. Contributors see this on the shared link.</p>
+                    <textarea id="tb_description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Related Image</label>
+                    <p class="help-text">Optional &mdash; a photo of the original sheet, or anything that goes with it.</p>
+                    <input type="file" class="form-control" id="tb_image" accept="image/*">
+                    <input type="hidden" id="tb_imageUrl">
+                    <img id="tb_imagePreview" class="img-fluid rounded mt-2 d-none" style="max-height: 140px;" alt="">
+                </div>
+
+                @await Html.PartialAsync("_ProjectOptions", new Apparcus.Models.ProjectOptionsViewModel
+                {
+                    Prefix = "tb_",
+                    CustomFieldsContainerId = "tbCustomFieldsContainer",
+                    AddCustomFieldFunction = "addTypeBCustomField",
+                    IsEdit = false,
+                    ShowAuditToggle = false
+                })
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-light border me-2" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="tb_submit_btn" type="button" onclick="saveTypeBProject()">Create Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Edit *@
+<div class="modal fade" id="edit_type_b" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Type-B Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="tbedit_projectId">
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" id="tbedit_name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" id="tbedit_customDate">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea id="tbedit_description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Related Image</label>
+                    <input type="file" class="form-control" id="tbedit_image" accept="image/*">
+                    <input type="hidden" id="tbedit_imageUrl">
+                    <img id="tbedit_imagePreview" class="img-fluid rounded mt-2 d-none" style="max-height: 140px;" alt="">
+                </div>
+
+                @await Html.PartialAsync("_ProjectOptions", new Apparcus.Models.ProjectOptionsViewModel
+                {
+                    Prefix = "tbedit_",
+                    CustomFieldsContainerId = "tbeditCustomFieldsContainer",
+                    AddCustomFieldFunction = "addTypeBEditCustomField",
+                    IsEdit = true,
+                    ShowAuditToggle = false
+                })
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-light border me-2" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="tbedit_submit_btn" type="button" onclick="editTypeBProject()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Add Record. Next keeps the form open for the following name on the sheet;
+   Done saves and closes. Typing up a sheet is dozens of these in a row. *@
+<div class="modal fade" id="add_record" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title mb-0">Add a Record</h5>
+                    <small class="text-muted" id="record_projectName"></small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="record_projectId">
+
+                <p class="help-text mb-3">
+                    Your contributor's name and amount paid are visible on your shared link.
+                </p>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" id="record_name">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Amount Paid</label>
+                        <input type="number" step="0.01" class="form-control" id="record_amount">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone Number <span class="text-muted">(optional)</span></label>
+                        <input type="text" class="form-control" id="record_phone">
+                    </div>
+                </div>
+
+                <div id="recordCustomFields" class="row g-3 mt-0"></div>
+
+                <p class="mb-0 mt-3 small text-muted" id="record_quotaLine">
+                    @Model.Remaining.ToString("N0") of @Model.Quota.ToString("N0") records left
+                </p>
+                <p class="text-danger small mb-0 mt-2 d-none" id="record_error"></p>
+                <p class="text-success small mb-0 mt-2 d-none" id="record_saved"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-light border me-2" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-outline-primary me-2" id="record_next_btn" type="button" onclick="saveRecord(true)">Next</button>
+                <button class="btn btn-primary" id="record_done_btn" type="button" onclick="saveRecord(false)">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Buy a pack *@
+<div class="modal fade" id="buy_records" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Protect more records</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">
+                    The price is taken from your Personal Account and the records are added to your
+                    allowance, shared across all your Type-B projects.
+                </p>
+
+                <div class="list-group mb-3" id="buy_records_packs">
+                    @for (var i = 0; i < Model.Packs.Count; i++)
+                    {
+                        var pack = Model.Packs[i];
+                        <label class="list-group-item d-flex align-items-center gap-2">
+                            <input class="form-check-input m-0" type="radio" name="record_pack"
+                                   value="@pack.Size" checked="@(i == 0)">
+                            <span class="flex-grow-1">@pack.Size.ToString("N0") records</span>
+                            <span class="fw-semibold">₦@pack.PriceNaira.ToString("N0")</span>
+                        </label>
+                    }
+                </div>
+
+                <p class="mb-0 small text-muted">
+                    Personal Account balance: ₦@Model.PersonalBalance.ToString("N2")
+                </p>
+                <p class="text-danger small mb-0 mt-2 d-none" id="buy_records_error"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-light border me-2" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="buy_records_btn" type="button" onclick="buyRecordPack()">
+                    Pay
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Delete. Soft, so it can be brought back. *@
+<div class="modal fade" id="delete_type_b" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete project?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="delete_projectId">
+                <p class="mb-0">
+                    The project and its records are hidden, not destroyed &mdash; support can bring them
+                    back if you delete one by mistake.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-light border me-2" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" id="delete_submit_btn" type="button" onclick="deleteProject()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

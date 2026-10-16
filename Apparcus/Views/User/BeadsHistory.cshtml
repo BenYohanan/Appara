@@ -1,0 +1,137 @@
+﻿@using Core.ViewModels
+@model Core.ViewModels.IPageListModel<BeadTransactionViewModel>
+@{
+    ViewData["Title"] = "Beads History";
+    Layout = ViewBag.Layout;
+}
+
+<style>
+    body {
+        counter-reset: Serial;
+    }
+
+    tr td:first-child:before {
+        counter-increment: Serial;
+        content: counter(Serial);
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="content">
+        <div class="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+            <div class="my-auto mb-2">
+                <h2 class="mb-1">Beads History</h2>
+                <nav>
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0);"><i class="ti ti-smart-home"></i></a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="/User/PersonalAccount">Personal Account</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Beads History</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex my-xl-auto right-content align-items-center flex-wrap">
+                <div class="mb-2">
+                    <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#moveBeadsModal" class="btn btn-outline-warning">
+                        <i class="ti ti-award me-2"></i>Move Beads
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-warning d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <strong>Current Beads Balance:</strong>
+                <span class="fs-3 fw-bold">@ViewBag.BeadsBalance <small class="fw-normal">(₦@ViewBag.BeadsBalance)</small></span>
+            </div>
+        </div>
+
+        @await Html.PartialAsync("_PageSearcher", Model)
+
+        <div class="card-box d-none d-md-block">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Change</th>
+                            <th>Reason</th>
+                            <th>Project</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Model?.Any() == true)
+                        {
+                            foreach (var t in Model.Model)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        @if (t.BeadsChange >= 0)
+                                        {
+                                            <span class="badge bg-success">+@t.BeadsChange.ToString("N0")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">@t.BeadsChange.ToString("N0")</span>
+                                        }
+                                    </td>
+                                    <td>@t.Reason</td>
+                                    <td>@(string.IsNullOrEmpty(t.ProjectTitle) ? "—" : t.ProjectTitle)</td>
+                                    <td>@t.DateCreated.ToString("dd MMM yyyy, h:mm tt")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="d-block d-md-none">
+            <div class="row">
+                @if (Model.Model?.Any() == true)
+                {
+                    foreach (var t in Model.Model)
+                    {
+                        <div class="col-12 mb-3">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <h6 class="mb-0">@t.Reason</h6>
+                                            <small class="text-muted">@t.DateCreated.ToString("dd MMM yyyy, h:mm tt")</small>
+                                        </div>
+                                        @if (t.BeadsChange >= 0)
+                                        {
+                                            <span class="badge bg-success fs-6">+@t.BeadsChange.ToString("N0")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger fs-6">@t.BeadsChange.ToString("N0")</span>
+                                        }
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(t.ProjectTitle))
+                                    {
+                                        <hr>
+                                        <small class="text-muted">Project: @t.ProjectTitle</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="mt-4">
+            @await Html.PartialAsync("_Pager", Model.Model)
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_MoveBeadsModal")

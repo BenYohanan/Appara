@@ -1,0 +1,32 @@
+﻿<div class="modal fade" id="moveBeadsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Move Beads to Naira</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-3">
+                    You have <strong id="availableBeadsDisplay">--</strong> Beads (1 Bead = ₦1).
+                    Moved Beads are transferred instantly to your Personal Account.
+                </p>
+
+                <div class="mb-3">
+                    <label class="form-label">Amount of Beads to move</label>
+                    <div class="d-flex justify-content-end align-items-center mb-1">
+                        <button type="button" class="btn btn-link btn-sm p-0" id="moveAllBeadsBtn">
+                            Move all
+                        </button>
+                    </div>
+                    <input type="number" id="beadsMoveAmount" class="form-control" min="1" step="1" placeholder="Enter amount of Beads">
+                </div>
+
+                <div id="moveBeadsMessage" class="alert alert-info small mb-3" style="display:none;"></div>
+
+                <button type="button" onclick="moveBeads()" class="btn btn-primary w-100" id="moveBeadsBtn">
+                    Move Beads
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

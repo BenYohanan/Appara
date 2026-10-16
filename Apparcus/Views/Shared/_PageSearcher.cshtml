@@ -1,0 +1,90 @@
+﻿@using Core.ViewModels
+@model Core.ViewModels.IIPageListModel
+@{
+   
+  }
+  <style>
+    .form-inline {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 2rem;
+    }
+
+    .search-form {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .search-item {
+        display: flex;
+        align-items: center;
+        gap: 8px; 
+    }
+
+    .search-item select {
+        min-width: 140px; 
+    }
+
+  </style>
+ 
+<div class="card-box d-none d-md-block">
+    @using (Html.BeginForm(Model.SearchAction, Model.SearchController, FormMethod.Get, new { @class = "form-inline search-form" }))
+    {
+        <input type="hidden" name="projectId" value="@Context.Request.Query["projectId"]" />
+     
+        <div class="form-group search-item">
+            <label class="focus-label">Keyword:</label>
+            <div class=" pl-1">
+                <div class="form-group">
+                    <input asp-for="Keyword" class="form-control" name="Keyword" placeholder="Search by keyword" />
+                </div>
+            </div>
+        </div>
+        @if (Model.CanFilterByDateRange)
+        {
+            <div class="form-group search-item">
+                <label class="focus-label">From:</label>
+                <div class=" pl-0">
+                    <div class="form-group">
+                        <input asp-for="StartDate" name="StartDate" type="date" class="form-control floating" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group search-item">
+                <label class="focus-label">To:</label>
+                <div class="pl-0">
+                    <div class="form-group">
+                        <input asp-for="EndDate" name="EndDate" type="date" class="form-control floating" />
+                    </div>
+                </div>
+            </div>
+        }
+        
+        <div class="mx-md-3 p-1 offset-1">
+            <button type="submit" class="btn btn-success mx-2" value="Search">Search</button>
+            <button type="button" class="btn mx-1" style="background-color:#007bff;color:white"
+                    onclick="window.location.href='@Url.Action(Model.SearchAction, Model.SearchController, new { projectId = Context.Request.Query["projectId"] })'">
+                Reset
+            </button>
+        </div>
+    }
+</div>
+
+<script>
+    function resetSearchFields(button, resetHidden) {
+        var $form = $(button).parents('form');
+
+        $form.find('input[type=text],select').val('');
+        $form.find('input[type=date],select').val('');
+
+        if (resetHidden) {
+            $form.find('input[type=hidden]').val('');
+        }
+
+        return false;
+    }
+</script>
